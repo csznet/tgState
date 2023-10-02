@@ -2,6 +2,12 @@
 
 使用Telegram作为存储的图床，最大支持20MB
 
+自夸：
+ - 支持粘贴上传
+ - 支持一键复制bbcode markdown html代码
+ - 储存在自己的频道里，最大支持20MB
+ - 提供API接口，方便二次开发
+
 先决条件：
  - 创建机器人获取Bot Token
  - 创建频道，将机器人拉入作为管理员（公开频道，私有频道没有测试）
@@ -25,7 +31,7 @@ docker pull csznet/tgstate:latest
 docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tgstate:latest
 ```
 
-请提前将aaa和eee替换为你的bot token和频道地址
+请提前将aaa和bbb替换为你的bot token和频道地址
 
 
  二进制安装
