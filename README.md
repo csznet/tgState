@@ -2,6 +2,8 @@
 
 使用Telegram作为存储的图床，最大支持20MB
 
+言简意赅的教程：https://www.csz.net/proj/tgstate/
+
 自夸：
  - 支持粘贴上传
  - 支持一键复制bbcode markdown html代码
