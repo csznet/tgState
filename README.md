@@ -6,7 +6,11 @@
  - 创建机器人获取Bot Token
  - 创建频道，将机器人拉入作为管理员（公开频道，私有频道没有测试）
 
-建议套上CloudFlare 设置 ```/img/*``` 和```/d/*```完全缓存，并开启always online
+建议套上CloudFlare 设置 ```/img/*``` 和```/d/*```完全缓存，并开启always online  
+
+测试地址：https://tgtu.ikun123.com/
+测试图片：![tgState](https://tgtu.ikun123.com/img/364.jpg)
+
 
 Docker安装
 ====
