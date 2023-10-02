@@ -31,7 +31,7 @@ jobs:
       - name: Zip server and client
         run: |
           sudo apt-get install -y zip
-          zip tgState.zip tgState tsdc.sh
+          zip tgState.zip tgState
 
       - name: Upload server asset
         uses: actions/upload-release-asset@v1
