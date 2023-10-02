@@ -1,0 +1,60 @@
+name: Go
+
+on:
+  release:
+    types: [ "created" ]
+
+jobs:
+  build_and_upload_assets:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.17.2
+
+      - name: Update go.mod to use Go 1.17
+        run: |
+          sed -i 's/go 1.20/go 1.17/' go.mod
+
+      - name: Download dependencies
+        run: go mod tidy
+
+      - name: Build server and client
+        run: |
+          CGO_ENABLED=0 go build -o tgState main.go
+
+      - name: Zip server and client
+        run: |
+          sudo apt-get install -y zip
+          zip tgState.zip tgState tsdc.sh
+
+      - name: Upload server asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./tgState.zip
+          asset_name: tgState.zip
+          asset_content_type: application/zip
+    
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: csznet/tgstate:latest
