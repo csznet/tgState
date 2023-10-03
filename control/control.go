@@ -380,7 +380,19 @@ func Index(w http.ResponseWriter, r *http.Request) {
 				});
 	}
 		</script>
-		<a href="https://www.csz.net/"><img src="https://www.csz.net/csznet.png"></a>
+		<a href="https://github.com/csznet/tgState">
+		<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="44px" height="15px" viewBox="0 0 44 15" enable-background="new 0 0 44 15" xml:space="preserve">  <image id="image0" width="44" height="15" x="0" y="0"
+    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAPBAMAAABtkjCqAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAKlBMVEUAAAD/////ZgCZmWb/
+aAT/+vj/agj//fz8/Pr9/f36+vj/+PT/ZwOammiamlTzAAAAAWJLR0QB/wIt3gAAAAlwSFlzAAAL
+EwAACxMBAJqcGAAAAAd0SU1FB+cKAw8uKd154KgAAABtSURBVBjTY2DADhgFsQABBkYlOBA2hgHS
+hR1FlRIFiwQFhYQtjC0sBScvFAQLB6kFBQHVaisJW062sACqbYYIKwFVK+kEKQlbXLxhKQgXVgNK
+BKkCzbYw7kSoVhRVEhRUQpgNFaaGu7GHCXYAAPxWLJi8tpSVAAAAJXRFWHRkYXRlOmNyZWF0ZQAy
+MDIzLTEwLTAzVDE1OjQ2OjQxKzAwOjAwZpEQ6AAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0xMC0w
+M1QxNTo0Njo0MSswMDowMBfMqFQAAAAodEVYdGRhdGU6dGltZXN0YW1wADIwMjMtMTAtMDNUMTU6
+NDY6NDErMDA6MDBA2YmLAAAAAElFTkSuQmCC" />
+</svg>
+		</a>
 	</body>
 	</html>
 	`
