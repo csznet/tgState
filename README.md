@@ -2,13 +2,12 @@
 
 使用Telegram作为存储的图床，最大支持20MB
 
-v1.1.0版本取消了原图选项，直接都是上传的原图  
-
-言简意赅的Docker搭建教程：https://www.csz.net/proj/tgstate/
+搭配CloudFlare：https://www.csz.net/proj/tgstate/
 
 如果需要更多参数支持，建议使用二进制方式运行
 
 自夸：
+ - 原图上传
  - 支持Vercel一键搭建
  - 支持粘贴上传
  - 支持一键复制bbcode markdown html代码
@@ -22,9 +21,9 @@ v1.1.0版本取消了原图选项，直接都是上传的原图
 设置频道需要创建频道，将机器人拉入作为管理员（公开频道，私有频道没有测试）
 设置为telegram的user id需要先给机器人发一条信息，telegram user id查看（@getmyid_bot）
 
-建议套上CloudFlare 设置 ```/img/*``` 和```/d/*```完全缓存，并开启always online  
+建议套上CloudFlare 设置 ```/d/*```完全缓存，并开启always online  
 
-测试地址：https://tgtu.ikun123.com/  
+测试地址：https://tgtu.ikun123.com/  (搭建在vercel)  
 测试图片：![tgState](https://tgtu.ikun123.com/img/364.jpg)
 
 
@@ -48,7 +47,7 @@ docker pull csznet/tgstate:latest
 docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tgstate:latest
 ```
 
-请提前将aaa和bbb替换为你的bot token和频道地址
+请提前将aaa和bbb替换为你的bot token和频道地址or个人id
 
 
  二进制安装
@@ -68,7 +67,7 @@ docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tg
  ./tgState -token xxxx -channel @xxxx
 ```
 
-其中的xxxx为bot token @xxxx为频道地址
+其中的xxxx为bot token @xxxx为频道地址or个人id
 
 如果需要自定义端口，可以带上-port参数，如
 ```
@@ -78,7 +77,3 @@ docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tg
 ```
  ./tgState -token xxxx -channel @xxxx -port 8888 -index
  ```  
-需要默认上传原图，只需要带上参数-origin，如  
-```
- ./tgState -token xxxx -channel @xxxx -port 8888 -index -origin
- ```
