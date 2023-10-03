@@ -24,7 +24,8 @@
 建议套上CloudFlare 设置 ```/d/*```完全缓存，并开启always online  
 
 测试地址：https://tgtu.ikun123.com/  (搭建在vercel)  
-测试图片：![tgState](https://tgtu.ikun123.com/img/364.jpg)
+测试图片：  
+![tgState](https://tgtu.ikun123.com/img/364.jpg)  
 
 
 Vercel安装
