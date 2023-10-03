@@ -2,7 +2,9 @@
 
 使用Telegram作为存储的图床，最大支持20MB
 
-言简意赅的教程：https://www.csz.net/proj/tgstate/
+言简意赅的Docker搭建教程：https://www.csz.net/proj/tgstate/
+
+如果需要更多参数支持，建议使用二进制方式运行
 
 自夸：
  - 支持粘贴上传
@@ -62,4 +64,8 @@ docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tg
 如果不需要首页，只需要API和图片展示页面，则带上-index参数，如
 ```
  ./tgState -token xxxx -channel @xxxx -port 8888 -index
+ ```  
+需要默认上传原图，只需要带上参数-origin，如  
+```
+ ./tgState -token xxxx -channel @xxxx -port 8888 -index -origin
  ```

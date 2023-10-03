@@ -68,13 +68,11 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 			Message: "error",
 		}
 		var img string
-		if fileSize > 5*1024*1024 {
+		if conf.ImgOrigin || fileSize > 5*1024*1024 {
 			img = "/d/" + utils.UpDocument(utils.TgFileData(header.Filename, fileBytes))
 		} else {
-			// 发送图片到 Telegram
 			img = "/img/" + utils.SendImageToTelegram(utils.TgFileData(header.Filename, fileBytes))
 		}
-		// 这里示例直接返回JSON响应
 		res = conf.UploadResponse{
 			Code:    1,
 			Message: img,

@@ -37,9 +37,13 @@ func init() {
 	flag.StringVar(&conf.BotToken, "token", "", "Bot Token")
 	flag.StringVar(&conf.ChannelName, "channel", "", "Channel Name")
 	indexPtr := flag.Bool("index", false, "Show Index")
+	orighinPtr := flag.Bool("origin", false, "Origin Img")
 	flag.Parse()
 	if *indexPtr {
 		index = false
+	}
+	if *orighinPtr {
+		conf.ImgOrigin = true
 	}
 	if conf.BotToken == "" {
 		conf.BotToken = os.Getenv("TOKEN")
