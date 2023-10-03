@@ -1,8 +1,8 @@
 # tgstate
 
-v1.1.0版本取消了原图选项，直接都是上传的原图  
-
 使用Telegram作为存储的图床，最大支持20MB
+
+v1.1.0版本取消了原图选项，直接都是上传的原图  
 
 言简意赅的Docker搭建教程：https://www.csz.net/proj/tgstate/
 
