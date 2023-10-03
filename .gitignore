@@ -24,3 +24,4 @@ mk.txt
 .vscode/*
 tmp/*
 .air.toml
+.vercel

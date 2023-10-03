@@ -68,11 +68,12 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 			Message: "error",
 		}
 		var img string
-		if conf.ImgOrigin || fileSize > 5*1024*1024 {
-			img = "/d/" + utils.UpDocument(utils.TgFileData(header.Filename, fileBytes))
-		} else {
-			img = "/img/" + utils.SendImageToTelegram(utils.TgFileData(header.Filename, fileBytes))
-		}
+		img = "/d/" + utils.UpDocument(utils.TgFileData(header.Filename, fileBytes))
+		// if conf.ImgOrigin || fileSize > 5*1024*1024 {
+		// 	img = "/d/" + utils.UpDocument(utils.TgFileData(header.Filename, fileBytes))
+		// } else {
+		// 	img = "/img/" + utils.SendImageToTelegram(utils.TgFileData(header.Filename, fileBytes))
+		// }
 		res = conf.UploadResponse{
 			Code:    1,
 			Message: img,
@@ -319,7 +320,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 				$('#uploadButton').text('上传中');
 				$('#loading').show();
 				var baseUrl = window.location.protocol + "//" + window.location.hostname;
-				if(window.location.port !== "80"){
+				if(window.location.port !== "80" && window.location.port.length>0){
 					baseUrl = baseUrl + ":" + window.location.port;
 				}
 				$.ajax({

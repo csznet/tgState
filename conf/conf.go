@@ -2,7 +2,6 @@ package conf
 
 var BotToken string
 var ChannelName string
-var ImgOrigin bool
 
 type Thumbnail struct {
 	FileID       string `json:"file_id"`

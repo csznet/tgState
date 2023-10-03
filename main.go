@@ -16,7 +16,7 @@ var index = true
 func main() {
 	//判断是否设置参数
 	if conf.BotToken == "" || conf.ChannelName == "" {
-		fmt.Println("请先设置Bot Token和频道名称")
+		fmt.Println("请先设置Bot Token和对象")
 		return
 	}
 	web()
@@ -37,13 +37,9 @@ func init() {
 	flag.StringVar(&conf.BotToken, "token", "", "Bot Token")
 	flag.StringVar(&conf.ChannelName, "channel", "", "Channel Name")
 	indexPtr := flag.Bool("index", false, "Show Index")
-	orighinPtr := flag.Bool("origin", false, "Origin Img")
 	flag.Parse()
 	if *indexPtr {
 		index = false
-	}
-	if *orighinPtr {
-		conf.ImgOrigin = true
 	}
 	if conf.BotToken == "" {
 		conf.BotToken = os.Getenv("TOKEN")
