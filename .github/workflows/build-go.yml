@@ -24,11 +24,11 @@ jobs:
       - name: Download dependencies
         run: go mod tidy
 
-      - name: Build server and client
+      - name: Build Linux amd64
         run: |
           CGO_ENABLED=0 go build -o tgState main.go
 
-      - name: Zip server and client
+      - name: Zip Linux amd64
         run: |
           sudo apt-get install -y zip
           zip tgState.zip tgState
