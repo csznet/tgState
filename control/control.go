@@ -174,11 +174,11 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	htmlForm := `<!DOCTYPE html>
 	<html>
 	<head>
+		<meta charset="UTF-8">
 		<title>Telegram图床</title>
 		<meta name="keywords" content="telegram图床,tg图床,免费图床,永久图床,图片外链,免费图片外链,纸飞机图床,电报图床" />
 		<meta name="description" content="telegram图床,tg图床,免费图床,永久图床,图片外链,免费图片外链,纸飞机图床,电报图床" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<meta charset="UTF-8">
 		<style>
 			#uploadButton,
 			#uploadFileLabel {
