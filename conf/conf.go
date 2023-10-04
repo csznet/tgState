@@ -2,6 +2,7 @@ package conf
 
 var BotToken string
 var ChannelName string
+var Pass string
 
 type Thumbnail struct {
 	FileID       string `json:"file_id"`

@@ -24,10 +24,11 @@ func main() {
 
 func web() {
 	http.HandleFunc("/img/", control.Img)
+	http.HandleFunc("/pwd", control.Pwd)
 	http.HandleFunc("/d/", control.D)
-	http.HandleFunc("/api", control.UploadImageAPI)
+	http.HandleFunc("/api", control.Middleware(control.UploadImageAPI))
 	if index {
-		http.HandleFunc("/", control.Index)
+		http.HandleFunc("/", control.Middleware(control.Index))
 	}
 	http.ListenAndServe(":"+webPort, nil)
 }
@@ -36,6 +37,7 @@ func init() {
 	flag.StringVar(&webPort, "port", "8088", "Web Port")
 	flag.StringVar(&conf.BotToken, "token", "", "Bot Token")
 	flag.StringVar(&conf.ChannelName, "channel", "", "Channel Name")
+	flag.StringVar(&conf.Pass, "pass", "", "Visit Password")
 	indexPtr := flag.Bool("index", false, "Show Index")
 	flag.Parse()
 	if *indexPtr {

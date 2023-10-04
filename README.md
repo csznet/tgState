@@ -9,6 +9,7 @@
 如有疑惑，可以咨询TG @tgstate123
 
 自夸：
+ - 支持限制密码访问
  - 原图上传
  - 支持Vercel一键搭建
  - 支持粘贴上传
@@ -33,8 +34,11 @@
 Vercel安装
 ====
 
-[点我传送至Vercel配置页面](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=channel&project-name=tgState&repository-name=tgState)  
-token填写你的bot token，channel可以为频道(@xxxx)，也可以为你的telegram id(@getmyid_bot获取)
+[点我传送至Vercel配置页面](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=channel&env=pass&project-name=tgState&repository-name=tgState)  
+
+ 1. ```token```填写你的bot token  
+ 2. ```channel```可以为频道(@xxxx)，也可以为你的telegram id(@getmyid_bot获取)  
+ 3. ```pass```填写访问密码，如不需要，直接填写```none```即可
 
 
 Docker安装
@@ -80,3 +84,12 @@ docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tg
 ```
  ./tgState -token xxxx -channel @xxxx -port 8888 -index
  ```  
+ 如果需要限制密码访问，只需要带上-pass参数即可，如设置密码为csznet：  
+ ```
+  ./tgState -token xxxx -channel @xxxx -port 8888 -pass csznet
+ ```
+
+ 更新日志
+ ===
+
+  - 2023/10/5 增加密码访问

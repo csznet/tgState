@@ -12,6 +12,8 @@ import (
 func Vercel(w http.ResponseWriter, r *http.Request) {
 	conf.BotToken = os.Getenv("token")
 	conf.ChannelName = os.Getenv("channel")
+	conf.Pass = os.Getenv("pass")
+	conf.Pass = "110"
 	// 获取请求路径
 	path := r.URL.Path
 	// 如果请求路径以 "/img/" 开头
@@ -28,8 +30,10 @@ func Vercel(w http.ResponseWriter, r *http.Request) {
 	switch path {
 	case "/api":
 		// 调用 control 包中的 UploadImageAPI 处理函数
-		control.UploadImageAPI(w, r)
+		control.Middleware(control.UploadImageAPI)(w, r)
+	case "/pwd":
+		control.Pwd(w, r)
 	default:
-		control.Index(w, r)
+		control.Middleware(control.Index)(w, r)
 	}
 }

@@ -168,221 +168,12 @@ func Img(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+const htmlHead string = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Telegram图床</title><meta name="keywords" content="telegram图床,tg图床,免费图床,永久图床,图片外链,免费图片外链,纸飞机图床,电报图床"><meta name="description" content="telegram图床,tg图床,免费图床,永久图床,图片外链,免费图片外链,纸飞机图床,电报图床"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><style>#uploadButton,#uploadFileLabel{display:block;max-width:200px;margin:0 auto;margin-bottom:10px}body{font-family:Arial,sans-serif;text-align:center}h1{color:#333}.custom-file-input{display:none}.custom-file-label{background-color:#007bff;color:#fff;padding:10px 20px;cursor:pointer}.custom-file-label:hover{background-color:#0056b3}#uploadButton{background-color:#007bff;color:#fff;padding:10px 20px;border:none;cursor:pointer}#uploadButton[disabled]{background-color:#ccc;cursor:not-allowed}#uploadButton:hover{background-color:#0056b3}#response{margin-top:20px;padding:10px}.response-item{margin-bottom:10px;padding:10px;border-radius:5px}.response-success{background-color:#d4edda;border-color:#c3e6cb;color:#155724}.response-error{background-color:#f8d7da;border-color:#f5c6cb;color:#721c24}#loading{display:none}.copy-code{margin:5px}.copy-links{margin-top:5px}#uploadButton[disabled]:hover{background-color:#ccc;cursor:not-allowed}.password{margin:0;padding:0;display:flex;justify-content:center;align-items:center;height:100vh;background-color:#f2f2f2}.form-container{text-align:center;background-color:#fff;padding:20px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.2)}.form-input{width:300px;padding:10px;margin:10px;border:1px solid #ccc;border-radius:5px;font-size:16px}.form-button{padding:10px 20px;background-color:#007bff;color:#fff;border:none;border-radius:5px;font-size:18px;cursor:pointer}@media (max-width:465px){.form-container{padding:0;border-radius:0}.form-input{margin-top:30px}}</style><script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head></html>`
+
 // 首页
 func Index(w http.ResponseWriter, r *http.Request) {
 	// 如果不是 POST 请求，显示上传图片的 HTML 表单
-	htmlForm := `<!DOCTYPE html>
-	<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Telegram图床</title>
-		<meta name="keywords" content="telegram图床,tg图床,免费图床,永久图床,图片外链,免费图片外链,纸飞机图床,电报图床" />
-		<meta name="description" content="telegram图床,tg图床,免费图床,永久图床,图片外链,免费图片外链,纸飞机图床,电报图床" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<style>
-			#uploadButton,
-			#uploadFileLabel {
-				display: block;
-				max-width: 200px; /* 固定宽度 */
-				margin: 0 auto; /* 居中 */
-				margin-bottom: 10px; /* 添加底部间距 */
-			}
-	
-			body {
-				font-family: Arial, sans-serif;
-				text-align: center;
-			}
-	
-			h1 {
-				color: #333;
-			}
-	
-			.custom-file-input {
-				display: none;
-			}
-	
-			.custom-file-label {
-				background-color: #007BFF;
-				color: #fff;
-				padding: 10px 20px;
-				cursor: pointer;
-			}
-	
-			.custom-file-label:hover {
-				background-color: #0056b3;
-			}
-	
-			#uploadButton {
-				background-color: #007BFF;
-				color: #fff;
-				padding: 10px 20px;
-				border: none;
-				cursor: pointer;
-			}
-	
-			#uploadButton[disabled] {
-				background-color: #ccc;
-				cursor: not-allowed;
-			}
-	
-			#uploadButton:hover {
-				background-color: #0056b3;
-			}
-	
-			#response {
-				margin-top: 20px;
-				padding: 10px;
-			}
-	
-			.response-item {
-				margin-bottom: 10px;
-				padding: 10px;
-				border-radius: 5px;
-			}
-	
-			.response-success {
-				background-color: #d4edda;
-				border-color: #c3e6cb;
-				color: #155724;
-			}
-	
-			.response-error {
-				background-color: #f8d7da;
-				border-color: #f5c6cb;
-				color: #721c24;
-			}
-	
-			#loading {
-				display: none;
-			}
-			.copy-code{
-				margin: 5px;
-			}
-			.copy-links{
-				margin-top: 5px;
-			}
-			#uploadButton[disabled]:hover {
-		background-color: #ccc;
-		cursor: not-allowed;
-	}
-	
-		</style>
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	</head>
-	<body>
-		<h1>上传图片到 Telegram</h1>
-		<label for="uploadFile" id="uploadFileLabel" class="custom-file-label">选择文件</label>
-		<input type="file" name="image" id="uploadFile" accept=".jpg, .jpeg, .png" class="custom-file-input">
-		<button id="uploadButton">上传</button>
-		<div id="loading">上传中...</div>
-		<div id="response" class="ui-widget">
-		</div>
-	
-		<script>
-	// 监听粘贴事件
-	document.addEventListener('paste', function (e) {
-		var items = e.clipboardData.items;
-		for (var i = 0; i < items.length; i++) {
-			var item = items[i];
-			if (item.type.indexOf('image') !== -1) {
-				// 获取粘贴的图片文件
-				var file = item.getAsFile();
-				// 调用上传函数，将file传递给上传逻辑
-				$('#uploadFileLabel').text("已选择剪贴板文件").css('background-color', '#0056b3');
-				uploadImg(file);
-			}
-		}
-	});
-	$(document).ready(function () {
-		$('#uploadFile').change(function () {
-			var fileName = $(this).val().split('\\').pop();
-			if (fileName) {
-				$('#uploadFileLabel').text('已选择文件: ' + fileName).css('background-color', '#0056b3');
-			} else {
-				$('#uploadFileLabel').text('选择文件').css('background-color', '#007BFF');
-			}
-		});
-		$('#uploadButton').click(function () {
-			var fileInput = document.getElementById('uploadFile');
-			var file = fileInput.files[0];
-			if(file){
-				uploadImg(file)
-			}else{
-				alert('请选择一个图片文件');
-			}
-		});
-	});
-	function uploadImg(file){
-		var formData = new FormData();
-				formData.append('image', file);
-				// 禁用上传按钮并显示loading
-				$('#uploadButton').prop('disabled', true);
-				$('#uploadButton').text('上传中');
-				$('#loading').show();
-				var baseUrl = window.location.protocol + "//" + window.location.hostname;
-				if(window.location.port !== "80" && window.location.port.length>0){
-					baseUrl = baseUrl + ":" + window.location.port;
-				}
-				$.ajax({
-					type: 'POST',
-					url: baseUrl+'/api',
-					data: formData,
-					contentType: false,
-					processData: false,
-					success: function (response) {
-						if (response.code === 1) {
-							var imgUrl = baseUrl + response.message;
-							var newItem = $('<div class="response-item response-success">上传成功，图片外链：<a target="_blank" href="' + imgUrl + '">' + imgUrl + '</a>' +
-								'<div class="copy-links">' +
-								'<span class="copy-code" data-clipboard-text="&lt;img src=&quot;' + imgUrl + '&quot; alt=&quot;Your Alt Text&quot;&gt;">HTML</span>' +
-								'<span class="copy-code" data-clipboard-text="![Alt Text](' + imgUrl + ')">Markdown</span>' +
-								'<span class="copy-code" data-clipboard-text="[img]' + imgUrl + '[/img]">BBCode</span>' +
-								'</div></div>');
-							$('#response').prepend(newItem); // 将新数据放在最前面
-	
-							// 清除文件输入框的值
-							$('#uploadFile').val('');
-							$('#uploadFileLabel').text('选择文件').css('background-color', '#007BFF');
-	
-							// 添加复制功能
-							$('.copy-code').click(function () {
-								var textToCopy = $(this).data('clipboard-text');
-								var tempInput = $('<input>');
-								$('body').append(tempInput);
-								tempInput.val(textToCopy).select();
-								document.execCommand('copy');
-								tempInput.remove();
-	
-								// 显示复制成功文本
-								var copyText = $(this);
-								var originalText = copyText.text();
-								copyText.text('复制成功');
-	
-								setTimeout(function () {
-									copyText.text(originalText);
-								}, 1000);
-							});
-						} else {
-							var newItem = $('<div class="response-item response-error">上传失败,错误信息：' + response.message + '</div>');
-							$('#response').prepend(newItem); // 将新数据放在最前面
-						}
-					},
-					error: function () {
-						var newItem = $('<div class="response-item response-error">上传失败</div>');
-						$('#response').prepend(newItem); // 将新数据放在最前面
-					},
-					complete: function () {
-						// 启用上传按钮并隐藏loading
-						$('#uploadButton').prop('disabled', false);
-						$('#uploadButton').text('上传');
-						$('#loading').hide();
-					}
-				});
-	}
-		</script>
-		<a target="_blank" href="https://github.com/csznet/tgState">
-		<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="44px" height="15px" viewBox="0 0 44 15" enable-background="new 0 0 44 15" xml:space="preserve">  <image id="image0" width="44" height="15" x="0" y="0"
-    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAPBAMAAABtkjCqAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+	htmlForm := htmlHead + `<body><h1>上传图片到 Telegram</h1><label for="uploadFile" id="uploadFileLabel" class="custom-file-label">选择文件</label> <input type="file" name="image" id="uploadFile" accept=".jpg, .jpeg, .png" class="custom-file-input"> <button id="uploadButton">上传</button><div id="loading">上传中...</div><div id="response" class="ui-widget"></div><script>function uploadImg(o){var e=new FormData;e.append("image",o),$("#uploadButton").prop("disabled",!0),$("#uploadButton").text("上传中"),$("#loading").show();var a=window.location.protocol+"//"+window.location.hostname;"80"!==window.location.port&&0<window.location.port.length&&(a=a+":"+window.location.port),$.ajax({type:"POST",url:a+"/api",data:e,contentType:!1,processData:!1,success:function(o){var e,t;1===o.code?(e=a+o.message,t=$('<div class="response-item response-success">上传成功，图片外链：<a target="_blank" href="'+e+'">'+e+'</a><div class="copy-links"><span class="copy-code" data-clipboard-text="&lt;img src=&quot;'+e+'&quot; alt=&quot;Your Alt Text&quot;&gt;">HTML</span><span class="copy-code" data-clipboard-text="![Alt Text]('+e+')">Markdown</span><span class="copy-code" data-clipboard-text="[img]'+e+'[/img]">BBCode</span></div></div>'),$("#response").prepend(t),$("#uploadFile").val(""),$("#uploadFileLabel").text("选择文件").css("background-color","#007BFF"),$(".copy-code").click(function(){var o=$(this).data("clipboard-text"),e=$("<input>");$("body").append(e),e.val(o).select(),document.execCommand("copy"),e.remove();var t=$(this),a=t.text();t.text("复制成功"),setTimeout(function(){t.text(a)},1e3)})):(t=$('<div class="response-item response-error">上传失败,错误信息：'+o.message+"</div>"),$("#response").prepend(t))},error:function(){var o=$('<div class="response-item response-error">上传失败</div>');$("#response").prepend(o)},complete:function(){$("#uploadButton").prop("disabled",!1),$("#uploadButton").text("上传"),$("#loading").hide()}})}document.addEventListener("paste",function(o){for(var e=o.clipboardData.items,t=0;t<e.length;t++){var a,n=e[t];-1!==n.type.indexOf("image")&&(a=n.getAsFile(),$("#uploadFileLabel").text("已选择剪贴板文件").css("background-color","#0056b3"),uploadImg(a))}}),$(document).ready(function(){$("#uploadFile").change(function(){var o=$(this).val().split("\\").pop();o?$("#uploadFileLabel").text("已选择文件: "+o).css("background-color","#0056b3"):$("#uploadFileLabel").text("选择文件").css("background-color","#007BFF")}),$("#uploadButton").click(function(){var o=document.getElementById("uploadFile").files[0];o?uploadImg(o):alert("请选择一个图片文件")})})</script><a target="_blank" href="https://github.com/csznet/tgState"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="44px" height="15px" viewBox="0 0 44 15" enable-background="new 0 0 44 15" xml:space="preserve"><image id="image0" width="44" height="15" x="0" y="0" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAPBAMAAABtkjCqAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
 AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAKlBMVEUAAAD/////ZgCZmWb/
 aAT/+vj/agj//fz8/Pr9/f36+vj/+PT/ZwOammiamlTzAAAAAWJLR0QB/wIt3gAAAAlwSFlzAAAL
 EwAACxMBAJqcGAAAAAd0SU1FB+cKAw8uKd154KgAAABtSURBVBjTY2DADhgFsQABBkYlOBA2hgHS
@@ -390,12 +181,38 @@ hR1FlRIFiwQFhYQtjC0sBScvFAQLB6kFBQHVaisJW062sACqbYYIKwFVK+kEKQlbXLxhKQgXVgNK
 BKkCzbYw7kSoVhRVEhRUQpgNFaaGu7GHCXYAAPxWLJi8tpSVAAAAJXRFWHRkYXRlOmNyZWF0ZQAy
 MDIzLTEwLTAzVDE1OjQ2OjQxKzAwOjAwZpEQ6AAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0xMC0w
 M1QxNTo0Njo0MSswMDowMBfMqFQAAAAodEVYdGRhdGU6dGltZXN0YW1wADIwMjMtMTAtMDNUMTU6
-NDY6NDErMDA6MDBA2YmLAAAAAElFTkSuQmCC" />
-</svg>
-		</a>
-	</body>
-	</html>
-	`
+NDY6NDErMDA6MDBA2YmLAAAAAElFTkSuQmCC"/></svg></a></body>`
 	// 输出 HTML 表单
 	io.WriteString(w, htmlForm)
+}
+
+func Pwd(w http.ResponseWriter, r *http.Request) {
+	// 输出 HTML 表单
+	if r.Method != http.MethodPost {
+		io.WriteString(w, htmlHead+`<body class="password"><div class="form-container"><form action="/pwd" method="POST"><input name="p" class="form-input" type="text" placeholder="请输入密码"> <button class="form-button" type="submit">提交</button></form><p style="color:#b0b0b0">Power by tgState</p></div></body>`)
+		return
+	}
+	// 设置cookie
+	cookie := http.Cookie{
+		Name:  "p",
+		Value: r.FormValue("p"),
+	}
+	http.SetCookie(w, &cookie)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func Middleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if conf.Pass != "" && conf.Pass != "none" {
+			// 在这里检查cookie
+			cookie, err := r.Cookie("p")
+			if err != nil || cookie.Value != conf.Pass {
+				// 如果cookie不存在或值不为110，则重定向到/pwd
+				http.Redirect(w, r, "/pwd", http.StatusSeeOther)
+				return
+			}
+		}
+		// 如果cookie值为110，调用下一个处理程序
+		next(w, r)
+	}
 }
