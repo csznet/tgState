@@ -20,8 +20,8 @@
 先决条件：
  - 创建机器人获取Bot Token
 
-关于channel，可以设置为频道，格式为@xxxx，也可以设置为自己的ID
-设置频道需要创建频道，将机器人拉入作为管理员（公开频道，私有频道没有测试）
+关于channel，可以设置为频道，格式为@xxxx，也可以设置为自己的ID  
+设置频道需要创建频道，将机器人拉入作为管理员（公开频道,自定义link，私有频道没有测试）
 设置为telegram的user id需要先给机器人发一条信息，telegram user id查看（@getmyid_bot）
 
 建议套上CloudFlare 设置 ```/d/*```完全缓存，并开启always online  
