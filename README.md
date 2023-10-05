@@ -2,7 +2,7 @@
 
 使用Telegram作为存储的图床，最大支持20MB
 
-搭配CloudFlare：https://www.csz.net/proj/tgstate/
+进阶指南：https://www.csz.net/proj/tgstate/
 
 如果需要更多参数支持，建议使用二进制方式运行
 
