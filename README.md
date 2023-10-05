@@ -27,6 +27,8 @@
 建议套上CloudFlare 设置 ```/d/*```完全缓存，并开启always online  
 
 测试地址：https://tgtu.ikun123.com/  (搭建在vercel)  
+演示站由于搭建在Vercel，受vercel限制无法上传大于5M的图片  
+自己二进制文件搭建或者docker搭建不受影响  
 测试图片：  
 ![tgState](https://tgtu.ikun123.com/img/364.jpg)  
 
@@ -89,7 +91,13 @@ docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tg
   ./tgState -token xxxx -channel @xxxx -port 8888 -pass csznet
  ```
 
- 更新日志
- ===
+关于API  
+====
+
+直接将图片数据以二进制的方式发送给```/api```路径  
+会返回一个json数据，如果上传成功会得到code为1，massage为图片路径    
+
+更新日志
+===
 
   - 2023/10/5 增加密码访问
