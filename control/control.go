@@ -38,7 +38,6 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 			errJsonMsg("File size exceeds 20MB limit", w)
 			return
 		}
-
 		// 检查文件类型
 		allowedExts := []string{".jpg", ".jpeg", ".png"}
 		ext := filepath.Ext(header.Filename)
@@ -49,11 +48,12 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 		}
-
-		if !valid {
-			errJsonMsg("Invalid file type. Only .jpg, .jpeg, and .png are allowed.", w)
-			// http.Error(w, "Invalid file type. Only .jpg, .jpeg, and .png are allowed.", http.StatusBadRequest)
-			return
+		if conf.Mode != "pan" {
+			if !valid {
+				errJsonMsg("Invalid file type. Only .jpg, .jpeg, and .png are allowed.", w)
+				// http.Error(w, "Invalid file type. Only .jpg, .jpeg, and .png are allowed.", http.StatusBadRequest)
+				return
+			}
 		}
 
 		// 读取文件内容
