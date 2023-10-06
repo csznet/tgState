@@ -1,7 +1,7 @@
 tgState
 ==
 
-[CHINESE](https://github.com/csznet/tgState/README_en.md)
+[中文](https://github.com/csznet/tgState/blob/main/README.md)
 
 
 A file external link system that uses Telegram as storage.

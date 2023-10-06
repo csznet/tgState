@@ -1,7 +1,7 @@
 tgState
 ==
 
-[English](https://github.com/csznet/tgState/README_en.md)
+[English](https://github.com/csznet/tgState/blob/main/README_en.md)
 
 
 一款以Telegram作为储存的文件外链系统
