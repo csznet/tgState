@@ -31,12 +31,13 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		defer file.Close()
-
-		// 检查文件大小
-		fileSize := r.ContentLength
-		if fileSize > 20*1024*1024 {
-			errJsonMsg("File size exceeds 20MB limit", w)
-			return
+		if conf.Mode != "pan" {
+			// 检查文件大小
+			fileSize := r.ContentLength
+			if fileSize > 20*1024*1024 {
+				errJsonMsg("File size exceeds 20MB limit", w)
+				return
+			}
 		}
 		// 检查文件类型
 		allowedExts := []string{".jpg", ".jpeg", ".png"}

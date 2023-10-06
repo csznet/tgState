@@ -1,39 +1,36 @@
-# tgstate
+tgState
+==
 
-使用Telegram作为存储的图床 or 网盘  
+[English](https://github.com/csznet/tgState/README_en.md)
 
-进阶指南：https://www.csz.net/proj/tgstate/  
 
-如果需要更多参数支持，建议使用二进制方式运行  
+一款以Telegram作为储存的文件外链系统
+
+可以作为telegram图床，也可以作为telegram网盘使用。
+
+默认运行模式为图床模式，只允许`.jpg .png .jpeg`文件上传且限制不超过20MB，网盘模式为不限制后缀和大小  
 
 如有疑惑，可以咨询TG @tgstate123  
-
-自夸：
- - 支持限制密码访问（指上传，访问图片不受影响）
- - 原图上传
+**特性**
+ - 不限制上传文件大小（可选
+ - 支持访问密码限制
+ - 提供API
  - 支持Vercel一键搭建
- - 支持粘贴上传
- - 支持一键复制bbcode markdown html代码
- - 储存在自己的频道里，最大支持20MB
- - 提供API接口，方便二次开发
 
-先决条件：
- - 创建机器人获取Bot Token
+**Demo**
 
-关于channel，可以设置为频道，格式为@xxxx，也可以设置为自己的ID  
-设置频道需要创建频道，将机器人拉入作为管理员（公开频道,自定义link，私有频道没有测试）  
-设置为telegram的user id需要先给机器人发一条信息，telegram user id查看（@getmyid_bot）
+https://tgtu.ikun123.com/  
+搭建在Vercel，大文件可能会上传失败  
 
-建议套上CloudFlare 设置 ```/d/*```完全缓存，并开启always online  
+测试图片：
 
-测试地址：https://tgtu.ikun123.com/  (搭建在vercel)  
-演示站由于搭建在Vercel，受vercel限制无法上传大于5M的图片  
-自己二进制文件搭建或者docker搭建不受影响  
-测试图片：  
-![tgState](https://tgtu.ikun123.com/img/364.jpg)  
+![tgState](https://tgtu.ikun123.com/d/1310.png)  
 
+**准备说明**
+部署前需要准备一个Telegram Bot(@botfather处申请)  
+如果是需要存储在频道，则需要将Bot拉入频道作为管理员，公开频道并自定义频道Link  
 
-Vercel安装
+Vercel部署
 ====
 
  [点我传送至Vercel配置页面](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=channel&env=pass&env=mode&project-name=tgState&repository-name=tgState)  
@@ -43,7 +40,7 @@ Vercel安装
  3. ```pass```填写访问密码，如不需要，直接填写```none```即可
  4. ```mode```填写```pan```，代表以网盘模式运行,只需要以图床模式运行的话就随便填    
 
-Docker安装
+ Docker部署
 ====
 
 pull镜像
@@ -56,7 +53,7 @@ docker pull csznet/tgstate:latest
 docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tgstate:latest
 ```
 
-请提前将aaa和bbb替换为你的bot token和频道地址or个人id  
+请提前将```aaa```和```bbb```替换为你的bot token和频道地址or个人id  
 
 如果需要以网盘模式启动  
 
@@ -65,7 +62,7 @@ docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb -e MODE=p
 ```
 
 
- 二进制安装
+ 二进制部署
 ====
  下载Linux amd64环境的二进制文件
  ```
@@ -82,7 +79,7 @@ docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb -e MODE=p
  ./tgState -token xxxx -channel @xxxx
 ```
 
-其中的xxxx为bot token @xxxx为频道地址or个人id
+其中的```xxxx```为bot token ```@xxxx```为频道地址or个人id(个人ID只需要数字不需要@)
 
 如果需要自定义端口，可以带上-port参数，如
 ```
@@ -106,11 +103,4 @@ docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb -e MODE=p
 关于API  
 ====
 
-直接将文件数据以二进制的方式发送给```/api```路径  
-会返回一个json数据，如果上传成功会得到code为1，massage为文件路径    
-
-更新日志
-===
-
-  - 2023/10/5 增加密码访问
-  - 2023/10/6 增加不限制后缀、不限制大小的网盘模式
+直接将文件数据以二进制的方式发送给```/api```路径
