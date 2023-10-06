@@ -23,9 +23,12 @@ func main() {
 }
 
 func web() {
-	http.HandleFunc("/img/", control.Img)
 	http.HandleFunc("/pwd", control.Pwd)
-	http.HandleFunc("/d/", control.D)
+	if conf.Mode == "pan" {
+		http.HandleFunc("/d/", control.D)
+	} else {
+		http.HandleFunc("/d/", control.DD)
+	}
 	http.HandleFunc("/api", control.Middleware(control.UploadImageAPI))
 	if index {
 		http.HandleFunc("/", control.Middleware(control.Index))
@@ -38,6 +41,7 @@ func init() {
 	flag.StringVar(&conf.BotToken, "token", "", "Bot Token")
 	flag.StringVar(&conf.ChannelName, "channel", "", "Channel Name")
 	flag.StringVar(&conf.Pass, "pass", "", "Visit Password")
+	flag.StringVar(&conf.Mode, "mode", "", "Run mode")
 	indexPtr := flag.Bool("index", false, "Show Index")
 	flag.Parse()
 	if *indexPtr {
@@ -48,5 +52,8 @@ func init() {
 	}
 	if conf.ChannelName == "" {
 		conf.ChannelName = os.Getenv("CHANNEL")
+	}
+	if conf.Mode == "" {
+		conf.Mode = os.Getenv("MODE")
 	}
 }

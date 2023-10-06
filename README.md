@@ -1,8 +1,6 @@
 # tgstate
 
-使用Telegram作为存储的图床，最大支持20MB  
-
-如果需要不限制后缀、不限制上传文件大小的可以使用tgPan(https://github.com/csznet/tgPan)  
+使用Telegram作为存储的图床 or 网盘  
 
 进阶指南：https://www.csz.net/proj/tgstate/  
 
@@ -44,6 +42,13 @@ Vercel安装
  2. ```channel```可以为频道(@xxxx)，也可以为你的telegram id(@getmyid_bot获取)  
  3. ```pass```填写访问密码，如不需要，直接填写```none```即可
 
+ 如果需要以网盘模式（不限制后缀、不限制大小）运行，请按照以下配置：  
+ [点我传送至Vercel配置页面](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=channel&env=pass&env=mode&project-name=tgState&repository-name=tgState)  
+
+ 1. ```token```填写你的bot token  
+ 2. ```channel```可以为频道(@xxxx)，也可以为你的telegram id(@getmyid_bot获取)  
+ 3. ```pass```填写访问密码，如不需要，直接填写```none```即可
+ 4. ```mode```填写```pan```，代表以网盘模式运行  
 
 Docker安装
 ====
@@ -58,7 +63,13 @@ docker pull csznet/tgstate:latest
 docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tgstate:latest
 ```
 
-请提前将aaa和bbb替换为你的bot token和频道地址or个人id
+请提前将aaa和bbb替换为你的bot token和频道地址or个人id  
+
+如果需要以网盘模式启动  
+
+```
+docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb -e MODE=pan csznet/tgstate:latest
+```
 
 
  二进制安装
@@ -86,20 +97,27 @@ docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tg
 ```
 如果不需要首页，只需要API和图片展示页面，则带上-index参数，如
 ```
- ./tgState -token xxxx -channel @xxxx -port 8888 -index
- ```  
- 如果需要限制密码访问，只需要带上-pass参数即可，如设置密码为csznet：  
- ```
-  ./tgState -token xxxx -channel @xxxx -port 8888 -pass csznet
- ```
+./tgState -token xxxx -channel @xxxx -port 8888 -index
+```  
+如果需要限制密码访问，只需要带上-pass参数即可，如设置密码为csznet：  
+```
+./tgState -token xxxx -channel @xxxx -port 8888 -pass csznet
+```
+
+如果需要网盘模式运行，请带上-mode pan，如  
+
+```
+./tgState -token xxxx -channel @xxxx -port 8888 -mode pan
+```
 
 关于API  
 ====
 
-直接将图片数据以二进制的方式发送给```/api```路径  
-会返回一个json数据，如果上传成功会得到code为1，massage为图片路径    
+直接将文件数据以二进制的方式发送给```/api```路径  
+会返回一个json数据，如果上传成功会得到code为1，massage为文件路径    
 
 更新日志
 ===
 
   - 2023/10/5 增加密码访问
+  - 2023/10/6 增加不限制后缀、不限制大小的网盘模式
