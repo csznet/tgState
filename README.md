@@ -36,19 +36,12 @@
 Vercel安装
 ====
 
-[点我传送至Vercel配置页面](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=channel&env=pass&project-name=tgState&repository-name=tgState)  
-
- 1. ```token```填写你的bot token  
- 2. ```channel```可以为频道(@xxxx)，也可以为你的telegram id(@getmyid_bot获取)  
- 3. ```pass```填写访问密码，如不需要，直接填写```none```即可
-
- 如果需要以网盘模式（不限制后缀、不限制大小）运行，请按照以下配置：  
  [点我传送至Vercel配置页面](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=channel&env=pass&env=mode&project-name=tgState&repository-name=tgState)  
 
  1. ```token```填写你的bot token  
  2. ```channel```可以为频道(@xxxx)，也可以为你的telegram id(@getmyid_bot获取)  
  3. ```pass```填写访问密码，如不需要，直接填写```none```即可
- 4. ```mode```填写```pan```，代表以网盘模式运行  
+ 4. ```mode```填写```pan```，代表以网盘模式运行,只需要以图床模式运行的话就随便填    
 
 Docker安装
 ====

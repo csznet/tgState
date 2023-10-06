@@ -43,6 +43,19 @@ type Message struct {
 	Chat       Chat       `json:"chat"`
 	Date       int64      `json:"date"`
 	Document   Document   `json:"document"`
+	Video      Video      `json:"video`
+}
+type Video struct {
+	Duration     int       `json:"duration"`
+	Width        int       `json:"width"`
+	Height       int       `json:"height"`
+	FileName     string    `json:"file_name"`
+	MimeType     string    `json:"mime_type"`
+	Thumbnail    Thumbnail `json:"thumbnail"`
+	Thumb        Thumbnail `json:"thumb"`
+	FileID       string    `json:"file_id"`
+	FileUniqueID string    `json:"file_unique_id"`
+	FileSize     int       `json:"file_size"`
 }
 type UploadResponse struct {
 	Code    int    `json:"code"`

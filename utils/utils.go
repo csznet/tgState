@@ -60,7 +60,12 @@ func UpDocument(fileData tgbotapi.FileBytes) string {
 	}
 	var msg conf.Message
 	err = json.Unmarshal([]byte(response.Result), &msg)
-	fileName := strings.TrimPrefix(getDownloadUrl(msg.Document.FileID), "https://api.telegram.org/file/bot"+conf.BotToken+"/documents/file_")
+	var fileName string
+	if msg.Document.FileID != "" {
+		fileName = "/d/" + strings.TrimPrefix(getDownloadUrl(msg.Document.FileID), "https://api.telegram.org/file/bot"+conf.BotToken+"/documents/file_")
+	} else {
+		fileName = "/d/" + strings.TrimPrefix(getDownloadUrl(msg.Video.FileID), "https://api.telegram.org/file/bot"+conf.BotToken+"/videos/file_")
+	}
 	return fileName
 }
 
