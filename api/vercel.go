@@ -18,12 +18,7 @@ func Vercel(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	// 如果请求路径以 "/img/" 开头
 	if strings.HasPrefix(path, "/d/") {
-		// 调用 control 包中的 Img 处理函数
-		if conf.Mode == "pan" {
-			control.DD(w, r)
-		} else {
-			control.D(w, r)
-		}
+		control.D(w, r)
 		return // 结束处理，确保不执行默认处理
 	}
 	switch path {

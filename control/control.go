@@ -94,45 +94,6 @@ func errJsonMsg(msg string, w http.ResponseWriter) {
 }
 func D(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
-	id := strings.TrimPrefix(path, "/d/")
-	// 发起HTTP GET请求来获取Telegram图片
-	resp, err := http.Get("https://api.telegram.org/file/bot" + conf.BotToken + "/documents/file_" + id)
-	if err != nil {
-		http.Error(w, "Failed to fetch image", http.StatusInternalServerError)
-		return
-	}
-	defer resp.Body.Close()
-
-	// 检查Content-Type是否为图片类型
-	contentType := resp.Header.Get("Content-Type")
-	if !strings.HasPrefix(contentType, "application/octet-stream") {
-		// 设置响应的状态码为 404
-		w.WriteHeader(http.StatusNotFound)
-		// 写入响应内容
-		w.Write([]byte("404 Not Found"))
-		return
-	}
-	lastDotIndex := strings.LastIndex(id, ".")
-	// 检查是否找到点
-	if lastDotIndex != -1 {
-		// 从点的位置截取字符串的子串，即文件扩展名
-		extension := id[lastDotIndex+1:]
-		w.Header().Set("Content-Type", "image/"+extension)
-	} else {
-		http.Error(w, "Failed to show image", http.StatusInternalServerError)
-		return
-	}
-
-	// 将图片内容写入响应正文
-	_, err = io.Copy(w, resp.Body)
-	if err != nil {
-		http.Error(w, "Failed to show image", http.StatusInternalServerError)
-		return
-	}
-}
-
-func DD(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path
 	lastSlashIndex := strings.LastIndex(path, "/")
 	var fileName string
 	var fileExt string

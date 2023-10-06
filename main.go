@@ -24,11 +24,7 @@ func main() {
 
 func web() {
 	http.HandleFunc("/pwd", control.Pwd)
-	if conf.Mode == "pan" {
-		http.HandleFunc("/d/", control.D)
-	} else {
-		http.HandleFunc("/d/", control.DD)
-	}
+	http.HandleFunc("/d/", control.DD)
 	http.HandleFunc("/api", control.Middleware(control.UploadImageAPI))
 	if index {
 		http.HandleFunc("/", control.Middleware(control.Index))
