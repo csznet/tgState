@@ -1,12 +1,14 @@
 # tgstate
 
-使用Telegram作为存储的图床，最大支持20MB
+使用Telegram作为存储的图床，最大支持20MB  
 
-进阶指南：https://www.csz.net/proj/tgstate/
+如果需要不限制后缀、不限制上传文件大小的可以使用tgPan(https://github.com/csznet/tgPan)  
 
-如果需要更多参数支持，建议使用二进制方式运行
+进阶指南：https://www.csz.net/proj/tgstate/  
 
-如有疑惑，可以咨询TG @tgstate123
+如果需要更多参数支持，建议使用二进制方式运行  
+
+如有疑惑，可以咨询TG @tgstate123  
 
 自夸：
  - 支持限制密码访问（指上传，访问图片不受影响）
