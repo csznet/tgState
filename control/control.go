@@ -69,11 +69,6 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 		}
 		var img string
 		img = "/d/" + utils.UpDocument(utils.TgFileData(header.Filename, fileBytes))
-		// if conf.ImgOrigin || fileSize > 5*1024*1024 {
-		// 	img = "/d/" + utils.UpDocument(utils.TgFileData(header.Filename, fileBytes))
-		// } else {
-		// 	img = "/img/" + utils.SendImageToTelegram(utils.TgFileData(header.Filename, fileBytes))
-		// }
 		res = conf.UploadResponse{
 			Code:    1,
 			Message: img,
