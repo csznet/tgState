@@ -137,7 +137,7 @@ func DD(w http.ResponseWriter, r *http.Request) {
 	var fileName string
 	var fileExt string
 	tgType := "documents"
-	rType := "application/octet-stream"
+
 	if lastSlashIndex != -1 && lastSlashIndex < len(path)-1 {
 		contentAfterLastSlash := path[lastSlashIndex+1:]
 		fileName = contentAfterLastSlash
@@ -157,10 +157,13 @@ func DD(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to show content", http.StatusInternalServerError)
 		return
 	}
+	rType := "application/" + fileExt
 	if isImageExtension(fileExt) {
 		rType = "image/" + fileExt
+		w.Header().Set("Content-Disposition", "inline") // 设置为 "inline" 以支持在线播放
 	} else if isVideoExtension(fileExt) {
 		rType = "video/" + fileExt
+		w.Header().Set("Content-Disposition", "inline") // 设置为 "inline" 以支持在线播放
 		tgType = "videos"
 	}
 	// 发起HTTP GET请求来获取Telegram图片
@@ -179,7 +182,6 @@ func DD(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", rType)
-	w.Header().Set("Content-Disposition", "inline") // 设置为 "inline" 以支持在线播放
 	// 将图片内容写入响应正文
 	_, err = io.Copy(w, resp.Body)
 	if err != nil {
