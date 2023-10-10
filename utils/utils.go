@@ -42,7 +42,9 @@ func UpDocument(fileData tgbotapi.FileBytes) string {
 	var resp string
 	if msg.Document.FileID != "" {
 		resp = msg.Document.FileID
-	} else {
+	} else if msg.Audio.FileID != "" {
+		resp = msg.Audio.FileID
+	} else if msg.Video.FileID != "" {
 		resp = msg.Video.FileID
 	}
 	return resp

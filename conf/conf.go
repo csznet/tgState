@@ -44,6 +44,15 @@ type Message struct {
 	Date       int64      `json:"date"`
 	Document   Document   `json:"document"`
 	Video      Video      `json:"video`
+	Audio      Audio      `json:"audio"`
+}
+type Audio struct {
+	Duration     int    `json:duration`
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	FileName     string `json:"file_name"`
+	MimeType     string `json:"mime_type"`
+	FileSize     int    `json:"file_size"`
 }
 type Video struct {
 	Duration     int       `json:"duration"`
