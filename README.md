@@ -3,6 +3,7 @@ tgState
 
 [English](https://github.com/csznet/tgState/blob/main/README_en.md)
 
+【Notice】 1.2版本开始采用file_id形式留存外链，对以往版本外链不兼容，需要保留外链的谨慎更新  
 
 一款以Telegram作为储存的文件外链系统
 

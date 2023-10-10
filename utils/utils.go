@@ -3,7 +3,6 @@ package utils
 import (
 	"encoding/json"
 	"log"
-	"strings"
 
 	"csz.net/tgstate/conf"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -14,26 +13,6 @@ func TgFileData(fileName string, fileData []byte) tgbotapi.FileBytes {
 		Name:  fileName,
 		Bytes: fileData,
 	}
-}
-
-func SendImageToTelegram(inputFile tgbotapi.FileBytes) string {
-	botToken := conf.BotToken
-	bot, err := tgbotapi.NewBotAPI(botToken)
-	if err != nil {
-		log.Panic(err)
-	}
-	// 构建消息配置
-	msg := tgbotapi.NewPhotoToChannel(conf.ChannelName, inputFile)
-	// msg.Caption = "Hello, Telegram!"
-	// 发送消息
-	sentMessage, err := bot.Send(msg)
-	if err != nil {
-		log.Panic(err)
-	}
-	photos := sentMessage.Photo
-	res := getDownloadUrl(photos[len(photos)-1].FileID)
-	fileName := strings.TrimPrefix(res, "https://api.telegram.org/file/bot"+botToken+"/photos/file_")
-	return fileName
 }
 
 func UpDocument(fileData tgbotapi.FileBytes) string {
@@ -60,16 +39,16 @@ func UpDocument(fileData tgbotapi.FileBytes) string {
 	}
 	var msg conf.Message
 	err = json.Unmarshal([]byte(response.Result), &msg)
-	var fileName string
+	var resp string
 	if msg.Document.FileID != "" {
-		fileName = strings.TrimPrefix(getDownloadUrl(msg.Document.FileID), "https://api.telegram.org/file/bot"+conf.BotToken+"/documents/file_")
+		resp = msg.Document.FileID
 	} else {
-		fileName = strings.TrimPrefix(getDownloadUrl(msg.Video.FileID), "https://api.telegram.org/file/bot"+conf.BotToken+"/videos/file_")
+		resp = msg.Video.FileID
 	}
-	return fileName
+	return resp
 }
 
-func getDownloadUrl(fileID string) string {
+func GetDownloadUrl(fileID string) string {
 	bot, err := tgbotapi.NewBotAPI(conf.BotToken)
 	if err != nil {
 		log.Panic(err)

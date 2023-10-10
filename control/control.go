@@ -3,6 +3,7 @@ package control
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -95,46 +96,24 @@ func errJsonMsg(msg string, w http.ResponseWriter) {
 }
 func D(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
-	lastSlashIndex := strings.LastIndex(path, "/")
-	var fileName string
-	var fileExt string
-	tgType := "documents"
-
-	if lastSlashIndex != -1 && lastSlashIndex < len(path)-1 {
-		contentAfterLastSlash := path[lastSlashIndex+1:]
-		fileName = contentAfterLastSlash
-	} else {
+	id := strings.TrimPrefix(path, "/d/")
+	if id == "" {
 		// 设置响应的状态码为 404
 		w.WriteHeader(http.StatusNotFound)
 		// 写入响应内容
 		w.Write([]byte("404 Not Found"))
 		return
 	}
-	lastDotIndex := strings.LastIndex(fileName, ".")
-	// 检查是否找到点
-	if lastDotIndex != -1 {
-		// 从点的位置截取字符串的子串，即文件扩展名
-		fileExt = fileName[lastDotIndex+1:]
-	} else {
-		http.Error(w, "Failed to show content", http.StatusInternalServerError)
-		return
-	}
-	rType := "application/" + fileExt
-	if isImageExtension(fileExt) {
-		rType = "image/" + fileExt
-		w.Header().Set("Content-Disposition", "inline") // 设置为 "inline" 以支持在线播放
-	} else if isVideoExtension(fileExt) {
-		rType = "video/" + fileExt
-		w.Header().Set("Content-Disposition", "inline") // 设置为 "inline" 以支持在线播放
-		tgType = "videos"
-	}
+
 	// 发起HTTP GET请求来获取Telegram图片
-	resp, err := http.Get("https://api.telegram.org/file/bot" + conf.BotToken + "/" + tgType + "/file_" + fileName)
+	resp, err := http.Get(utils.GetDownloadUrl(id))
 	if err != nil {
 		http.Error(w, "Failed to fetch content", http.StatusInternalServerError)
 		return
 	}
 	defer resp.Body.Close()
+	rType := resp.Header.Get("Content-Type")
+	w.Header().Set("Content-Disposition", "inline") // 设置为 "inline" 以支持在线播放
 	// 检查Content-Type是否为图片类型
 	if !strings.HasPrefix(resp.Header.Get("Content-Type"), "application/octet-stream") {
 		// 设置响应的状态码为 404
@@ -143,32 +122,29 @@ func D(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("404 Not Found"))
 		return
 	}
+	// 读取前512个字节以用于文件类型检测
+	buffer := make([]byte, 512)
+	n, err := resp.Body.Read(buffer)
+	if err != nil {
+		log.Println("读取响应主体数据时发生错误:", err)
+		return
+	}
+	// 使用DetectContentType函数检测文件类型
+	rType = http.DetectContentType(buffer)
 	w.Header().Set("Content-Type", rType)
-	// 将图片内容写入响应正文
+	// 写入前512个字节到响应w
+	_, err = w.Write(buffer[:n])
+	if err != nil {
+		http.Error(w, "Failed to write content", http.StatusInternalServerError)
+		log.Println(http.StatusInternalServerError)
+		return
+	}
 	_, err = io.Copy(w, resp.Body)
 	if err != nil {
 		http.Error(w, "Failed to show content", http.StatusInternalServerError)
+		log.Println(http.StatusInternalServerError)
 		return
 	}
-}
-
-func isVideoExtension(extension string) bool {
-	supportedExtensions := []string{"mp4", "avi", "mov", "mkv", "flv"}
-	for _, ext := range supportedExtensions {
-		if extension == ext {
-			return true
-		}
-	}
-	return false
-}
-func isImageExtension(extension string) bool {
-	supportedExtensions := []string{"jpg", "jpeg", "png", "gif"}
-	for _, ext := range supportedExtensions {
-		if extension == ext {
-			return true
-		}
-	}
-	return false
 }
 
 const htmlHead string = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Telegram图床</title><meta name="keywords" content="telegram图床,tg图床,免费图床,永久图床,图片外链,免费图片外链,纸飞机图床,电报图床"><meta name="description" content="telegram图床,tg图床,免费图床,永久图床,图片外链,免费图片外链,纸飞机图床,电报图床"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><style>#uploadButton,#uploadFileLabel{display:block;max-width:200px;margin:0 auto;margin-bottom:10px}body{font-family:Arial,sans-serif;text-align:center}h1{color:#333}.custom-file-input{display:none}.custom-file-label{background-color:#007bff;color:#fff;padding:10px 20px;cursor:pointer}.custom-file-label:hover{background-color:#0056b3}#uploadButton{background-color:#007bff;color:#fff;padding:10px 20px;border:none;cursor:pointer}#uploadButton[disabled]{background-color:#ccc;cursor:not-allowed}#uploadButton:hover{background-color:#0056b3}#response{margin-top:20px;padding:10px}.response-item{margin-bottom:10px;padding:10px;border-radius:5px}.response-success{background-color:#d4edda;border-color:#c3e6cb;color:#155724}.response-error{background-color:#f8d7da;border-color:#f5c6cb;color:#721c24}#loading{display:none}.copy-code{margin:5px}.copy-links{margin-top:5px}#uploadButton[disabled]:hover{background-color:#ccc;cursor:not-allowed}.password{margin:0;padding:0;display:flex;justify-content:center;align-items:center;height:100vh;background-color:#f2f2f2}.form-container{text-align:center;background-color:#fff;padding:20px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.2)}.form-input{width:300px;padding:10px;margin:10px;border:1px solid #ccc;border-radius:5px;font-size:16px}.form-button{padding:10px 20px;background-color:#007bff;color:#fff;border:none;border-radius:5px;font-size:18px;cursor:pointer}@media (max-width:465px){.form-container{padding:0;border-radius:0}.form-input{margin-top:30px}}</style><script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head></html>`

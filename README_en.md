@@ -33,7 +33,7 @@ Test image：
 Before deployment, you need to prepare a Telegram Bot (apply at @botfather).
 If you need to store files in a channel, you need to add the Bot to the channel as an administrator, make the channel public, and customize the channel link.
 
-Vercel部署
+Vercel Deployment
 ====
 
  [Click here to go to the Vercel configuration page](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=channel&env=pass&env=mode&project-name=tgState&repository-name=tgState)  
