@@ -72,13 +72,11 @@ docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb -e MODE=p
  二进制部署
 ====
  下载Linux amd64环境的二进制文件
+ 
  ```
- wget https://github.com/csznet/tgState/releases/latest/download/tgState.zip
+ wget https://github.com/csznet/tgState/releases/latest/download/tgState.zip && unzip tgState.zip && rm tgState.zip
  ```
- 解压
- ```
- unzip tgState.zip && rm tgState.zip
- ```
+
  使用方法
 ----
 
