@@ -14,6 +14,8 @@ var webPort string
 var index = true
 
 func main() {
+	//输出版本号
+	fmt.Printf("版本号: %s\n", "v1.2.2")
 	//判断是否设置参数
 	if conf.BotToken == "" || conf.ChannelName == "" {
 		fmt.Println("请先设置Bot Token和对象")
@@ -38,13 +40,8 @@ func init() {
 	flag.StringVar(&conf.ChannelName, "channel", "", "Channel Name")
 	flag.StringVar(&conf.Pass, "pass", "", "Visit Password")
 	flag.StringVar(&conf.Mode, "mode", "", "Run mode")
-	showVersion := flag.Bool("v", false, "Show Version")
 	indexPtr := flag.Bool("index", false, "Show Index")
 	flag.Parse()
-	if *showVersion {
-		fmt.Printf("版本号: %s\n", "v1.2.2")
-		return
-	}
 	if *indexPtr {
 		index = false
 	}
