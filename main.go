@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 
@@ -14,8 +15,6 @@ var webPort string
 var index = true
 
 func main() {
-	//输出版本号
-	fmt.Printf("版本号: %s\n", "v1.2.2")
 	//判断是否设置参数
 	if conf.BotToken == "" || conf.ChannelName == "" {
 		fmt.Println("请先设置Bot Token和对象")
@@ -31,7 +30,18 @@ func web() {
 	if index {
 		http.HandleFunc("/", control.Middleware(control.Index))
 	}
-	http.ListenAndServe(":"+webPort, nil)
+	listener, err := net.Listen("tcp", ":"+webPort)
+	if err != nil {
+		fmt.Printf("端口 %s 已被占用\n", webPort)
+		return
+	}
+
+	defer listener.Close()
+	fmt.Printf("启动Web服务器，监听端口 %s\n", webPort)
+	err = http.Serve(listener, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func init() {
