@@ -26,7 +26,7 @@ tgState
 实时预览：https://tgstate.vercel.app
 
 
-https://tgtu.ikun123.com/  
+旧版本：https://tgtu.ikun123.com/  
 搭建在Vercel，大文件可能会上传失败  
 
 测试图片：
