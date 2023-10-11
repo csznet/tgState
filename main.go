@@ -38,8 +38,13 @@ func init() {
 	flag.StringVar(&conf.ChannelName, "channel", "", "Channel Name")
 	flag.StringVar(&conf.Pass, "pass", "", "Visit Password")
 	flag.StringVar(&conf.Mode, "mode", "", "Run mode")
+	showVersion := flag.Bool("v", false, "Show Version")
 	indexPtr := flag.Bool("index", false, "Show Index")
 	flag.Parse()
+	if *showVersion {
+		fmt.Printf("版本号: %s\n", "v1.2.2")
+		return
+	}
 	if *indexPtr {
 		index = false
 	}
