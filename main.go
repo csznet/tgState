@@ -9,6 +9,7 @@ import (
 
 	"csz.net/tgstate/conf"
 	"csz.net/tgstate/control"
+	"csz.net/tgstate/utils"
 )
 
 var webPort string
@@ -20,6 +21,7 @@ func main() {
 		fmt.Println("请先设置Bot Token和对象")
 		return
 	}
+	go utils.BotDo()
 	web()
 }
 
@@ -35,7 +37,6 @@ func web() {
 		fmt.Printf("端口 %s 已被占用\n", webPort)
 		return
 	}
-
 	defer listener.Close()
 	fmt.Printf("启动Web服务器，监听端口 %s\n", webPort)
 	err = http.Serve(listener, nil)

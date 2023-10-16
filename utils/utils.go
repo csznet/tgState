@@ -67,3 +67,29 @@ func GetDownloadUrl(fileID string) string {
 	// log.Printf("File Download URL: %s", fileURL)
 	return fileURL
 }
+func BotDo() {
+
+	bot, err := tgbotapi.NewBotAPI(conf.BotToken)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	bot.Debug = true
+
+	log.Printf("Authorized on account %s", bot.Self.UserName)
+
+	u := tgbotapi.NewUpdate(0)
+	u.Timeout = 60
+
+	updates := bot.GetUpdatesChan(u)
+
+	for update := range updates {
+		if update.Message != nil { // If we got a message
+			if update.Message.Text == "get" && update.Message.ReplyToMessage.Document.FileID != "" {
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.ReplyToMessage.Document.FileID)
+				msg.ReplyToMessageID = update.Message.MessageID
+				bot.Send(msg)
+			}
+		}
+	}
+}
