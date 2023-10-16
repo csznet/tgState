@@ -2,20 +2,21 @@ package utils
 
 import (
 	"encoding/json"
+	"io"
 	"log"
 
 	"csz.net/tgstate/conf"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func TgFileData(fileName string, fileData []byte) tgbotapi.FileBytes {
-	return tgbotapi.FileBytes{
-		Name:  fileName,
-		Bytes: fileData,
+func TgFileData(fileName string, fileData io.Reader) tgbotapi.FileReader {
+	return tgbotapi.FileReader{
+		Name:   fileName,
+		Reader: fileData,
 	}
 }
 
-func UpDocument(fileData tgbotapi.FileBytes) string {
+func UpDocument(fileData tgbotapi.FileReader) string {
 	bot, err := tgbotapi.NewBotAPI(conf.BotToken)
 	if err != nil {
 		log.Panic(err)

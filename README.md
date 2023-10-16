@@ -27,7 +27,7 @@ tgState
 
 
 旧版本：https://tgtu.ikun123.com/  
-搭建在Vercel，大文件可能会上传失败  
+搭建在Vercel，大文件可能会上传失败(资源限制)  
 
 测试图片：
 
@@ -36,6 +36,17 @@ tgState
 **准备说明**
 部署前需要准备一个Telegram Bot(@botfather处申请)  
 如果是需要存储在频道，则需要将Bot拉入频道作为管理员，公开频道并自定义频道Link  
+
+后台管理
+===
+
+后台管理计划是全Telegram管理，Vercel目前不支持，目前实现的有：  
+
+获取FileID
+---
+
+对bot聊天中的文件引用并回复```get```可以获取FileID，搭建地址+/d/+FileID即可访问资源
+
 
 Vercel部署
 ====
