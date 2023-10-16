@@ -71,7 +71,8 @@ func BotDo() {
 
 	bot, err := tgbotapi.NewBotAPI(conf.BotToken)
 	if err != nil {
-		log.Panic(err)
+		log.Println(err)
+		return
 	}
 
 	bot.Debug = true
