@@ -6,7 +6,8 @@
     <div id="response" class="ui-widget"></div>
     <script>
 function uploadFile(file) {
-  if (file.size <= 10 * 1024 * 1024) {
+  var limit = 10 * 1024 * 1024;
+  if (file.size <= limit) {
     uploadImg(file,1).then((url) => {
       // 处理上传成功的情况
       console.log(url);
@@ -16,7 +17,7 @@ function uploadFile(file) {
     });
   } else {
     // 文件大于20MB，需要分割成多个块
-    var chunkSize = 4 * 1024 * 1024; // 20MB
+    var chunkSize = limit; // 20MB
     var start = 0;
     var end = Math.min(chunkSize, file.size);
 
