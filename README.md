@@ -23,7 +23,7 @@ tgState
 
 **Demo**
 
-实时预览：https://tgstate.vercel.app
+实时预览：https://tgstate.vercel.app / https://tgstate.ikun123.com/
 
 
 旧版本：https://tgtu.ikun123.com/  
