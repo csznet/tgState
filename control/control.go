@@ -2,11 +2,13 @@ package control
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"csz.net/tgstate/assets"
@@ -131,21 +133,52 @@ func D(w http.ResponseWriter, r *http.Request) {
 		log.Println("读取响应主体数据时发生错误:", err)
 		return
 	}
-	// 使用DetectContentType函数检测文件类型
-	rType = http.DetectContentType(buffer)
-	w.Header().Set("Content-Type", rType)
-	// 写入前512个字节到响应w
-	_, err = w.Write(buffer[:n])
-	if err != nil {
-		http.Error(w, "Failed to write content", http.StatusInternalServerError)
-		log.Println(http.StatusInternalServerError)
-		return
-	}
-	_, err = io.Copy(w, resp.Body)
-	if err != nil {
-		http.Error(w, "Failed to show content", http.StatusInternalServerError)
-		log.Println(http.StatusInternalServerError)
-		return
+	// 输出文件内容到控制台
+	if string(buffer[:12]) == "tgstate-blob" {
+		fmt.Println("这是一个分块文件")
+		content := string(buffer)
+		lines := strings.Fields(content)
+		fmt.Println("文件名:" + lines[1])
+		w.Header().Set("Content-Type", "application/octet-stream")
+		w.Header().Set("Content-Disposition", "attachment; filename=\""+lines[1]+"\"")
+		for i := 2; i < len(lines); i++ {
+			fmt.Println("开始下载:" + lines[i])
+			fmt.Println("下载地址:" + utils.GetDownloadUrl(regexp.MustCompile("[^a-zA-Z0-9_]").ReplaceAllString(lines[i], "")))
+			blobResp, err := http.Get(utils.GetDownloadUrl(regexp.MustCompile("[^a-zA-Z0-9_]").ReplaceAllString(lines[i], "")))
+			if err != nil {
+				http.Error(w, "Failed to fetch content", http.StatusInternalServerError)
+				return
+			}
+
+			// 将文件名设置到Content-Disposition标头
+			blobResp.Header.Set("Content-Disposition", "attachment; filename=\""+lines[1]+"\"")
+
+			defer blobResp.Body.Close()
+
+			_, err = io.Copy(w, blobResp.Body)
+			if err != nil {
+				log.Println("写入响应主体数据时发生错误:", err)
+				return
+			}
+		}
+
+	} else {
+		// 使用DetectContentType函数检测文件类型
+		rType = http.DetectContentType(buffer)
+		w.Header().Set("Content-Type", rType)
+		// 写入前512个字节到响应w
+		_, err = w.Write(buffer[:n])
+		if err != nil {
+			http.Error(w, "Failed to write content", http.StatusInternalServerError)
+			log.Println(http.StatusInternalServerError)
+			return
+		}
+		_, err = io.Copy(w, resp.Body)
+		if err != nil {
+			http.Error(w, "Failed to show content", http.StatusInternalServerError)
+			log.Println(http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
