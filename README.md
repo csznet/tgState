@@ -27,7 +27,7 @@ tgState
 
 
 旧版本：https://tgtu.ikun123.com/  
-搭建在Vercel，大文件可能会上传失败(资源限制)  
+搭建在Vercel，大于5MB的文件不支持
 
 测试图片：
 
