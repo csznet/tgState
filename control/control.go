@@ -2,7 +2,6 @@ package control
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io"
 	"log"
@@ -134,17 +133,13 @@ func D(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// 输出文件内容到控制台
-	fmt.Println("到这里了")
 	if string(buffer[:12]) == "tgstate-blob" {
-		fmt.Println("这是一个分块文件")
 		content := string(buffer)
 		lines := strings.Fields(content)
-		fmt.Println("文件名:" + lines[1])
+		log.Println("这是一个分块文件,文件名:" + lines[1])
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.Header().Set("Content-Disposition", "attachment; filename=\""+lines[1]+"\"")
 		for i := 2; i < len(lines); i++ {
-			fmt.Println("开始下载:" + lines[i])
-			fmt.Println("下载地址:" + utils.GetDownloadUrl(regexp.MustCompile("[^a-zA-Z0-9_-]").ReplaceAllString(lines[i], "")))
 			blobResp, err := http.Get(utils.GetDownloadUrl(regexp.MustCompile("[^a-zA-Z0-9_-]").ReplaceAllString(lines[i], "")))
 			if err != nil {
 				http.Error(w, "Failed to fetch content", http.StatusInternalServerError)
