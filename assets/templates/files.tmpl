@@ -16,7 +16,7 @@ function uploadFile(file) {
     });
   } else {
     // 文件大于20MB，需要分割成多个块
-    var chunkSize = 5 * 1024 * 1024; // 20MB
+    var chunkSize = 4 * 1024 * 1024; // 20MB
     var start = 0;
     var end = Math.min(chunkSize, file.size);
 
@@ -34,6 +34,9 @@ function uploadFile(file) {
           .catch((error) => {
             // 处理上传失败的情况
             console.error(error);
+            var t = $('<div class="response-item response-error">上传失败('+e.message+')</div>');
+            $("#response").prepend(t);
+            return Promise.reject("Upload failed"); // 终止上传
           });
       } else {
     return Promise.resolve(); // 如果所有块都上传完成，返回一个已解决的 Promise
