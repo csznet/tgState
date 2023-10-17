@@ -26,7 +26,9 @@ func main() {
 }
 
 func web() {
-	http.HandleFunc("/pwd", control.Pwd)
+	if conf.Pass != "" && conf.Pass != "none" {
+		http.HandleFunc("/pwd", control.Pwd)
+	}
 	http.HandleFunc("/d/", control.D)
 	http.HandleFunc("/api", control.Middleware(control.UploadImageAPI))
 	if index {

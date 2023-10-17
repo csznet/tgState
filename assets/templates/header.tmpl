@@ -1,0 +1,151 @@
+{{define "public/header"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>tgState</title>
+    <meta name="keywords"
+        content="telegram图床,tg图床,免费图床,永久图床,图片外链,免费图片外链,纸飞机图床,电报图床,telegram网盘,纸飞机网盘,电报网盘,免费网盘,免费外链,临时文件" />
+    <meta name="description" content="telegram图床,tg图床,免费图床,永久图床,图片外链,免费图片外链,纸飞机图床,电报图床" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+    <style>
+        #uploadButton,
+        #uploadFileLabel {
+            display: block;
+            max-width: 200px;
+            margin: 0 auto;
+            margin-bottom: 10px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .custom-file-input {
+            display: none;
+        }
+
+        .custom-file-label {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .custom-file-label:hover {
+            background-color: #0056b3;
+        }
+
+        #uploadButton {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #uploadButton[disabled] {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #uploadButton:hover {
+            background-color: #0056b3;
+        }
+
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+        }
+
+        .response-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .response-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .response-error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        #loading {
+            display: none;
+        }
+
+        .copy-code {
+            margin: 5px;
+        }
+
+        .copy-links {
+            margin-top: 5px;
+        }
+
+        #uploadButton[disabled]:hover {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .password {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
+
+        .form-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-input {
+            width: 300px;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 465px) {
+            .form-container {
+                padding: 0;
+                border-radius: 0;
+            }
+
+            .form-input {
+                margin-top: 30px;
+            }
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+{{end}}

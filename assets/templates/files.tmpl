@@ -1,0 +1,139 @@
+{{template "public/header" .}}
+<body>
+    <h1>上传文件到 Telegram</h1><label for="uploadFile" id="uploadFileLabel" class="custom-file-label">选择文件</label> <input
+        type="file" name="image" id="uploadFile" class="custom-file-input"> <button id="uploadButton">上传</button>
+    <div id="loading">上传中...</div>
+    <div id="response" class="ui-widget"></div>
+    <script>
+function uploadImg(e) {
+  var o = new FormData();
+  o.append("image", e);
+  // 判断是否为图片
+  var isImage = e.type.startsWith('image/');
+    $("#uploadButton").prop("disabled", !0);
+    $("#uploadButton").text("上传中");
+    $("#loading").show();
+    // 判断是否为图片
+  var a = window.location.protocol + "//" + window.location.hostname;
+  "80" !== window.location.port &&
+    0 < window.location.port.length &&
+    (a = a + ":" + window.location.port),
+    $.ajax({
+    type: "POST",
+    url: a + "/api",
+    data: o,
+    contentType: !1,
+    processData: !1,
+    success: function (e) {
+      var link = a + e.message;
+      var t;
+      if (e.code == 1){
+      if (isImage) {
+        t = $(
+          '<div class="response-item response-success">上传成功，图片外链：<a target="_blank" href="' +
+            link +
+            '">' +
+            link +
+            '</a><div class="copy-links"><span class="copy-code" data-clipboard-text="&lt;img src=&quot;' +
+            link +
+            '&quot; alt=&quot;Your Alt Text&quot;&gt;">HTML</span><span class="copy-code" data-clipboard-text="![Alt Text](' +
+            link +
+            ')">Markdown</span><span class="copy-code" data-clipboard-text="[img]' +
+            link +
+            '[/img]">BBCode</span></div></div>'
+        );
+      } else {
+        t = $(
+          '<div class="response-item response-success">上传成功，文件外链：<a target="_blank" href="' +
+            link +
+            '">' +
+            link +
+            "</a></div>"
+        );
+      }
+      }else{
+      var t = $('<div class="response-item response-error">上传失败('+e.message+')</div>');
+      }
+      
+
+      $("#response").prepend(t);
+      $("#uploadFile").val("");
+      $("#uploadFileLabel")
+        .text("选择文件")
+        .css("background-color", "#007BFF");
+
+      $(".copy-code").click(function () {
+        var code = $(this).data("clipboard-text");
+        var input = $("<input>");
+        $("body").append(input);
+        input.val(code).select();
+        document.execCommand("copy");
+        input.remove();
+        var copyButton = $(this);
+        var originalText = copyButton.text();
+        copyButton.text("复制成功");
+        setTimeout(function () {
+          copyButton.text(originalText);
+        }, 1000);
+      });
+    },
+    error: function () {
+      var errorResponse = $('<div class="response-item response-error">上传失败</div>');
+      $("#response").prepend(errorResponse);
+    },
+    complete: function () {
+      $("#uploadButton").prop("disabled", !1);
+      $("#uploadButton").text("上传");
+      $("#loading").hide();
+    }
+  });
+}
+function isImageExtension(e) {
+  var o = e.substring(e.lastIndexOf("."));
+  return [".jpg", ".jpeg", ".png", ".gif", ".bmp"].includes(o.toLowerCase());
+}
+document.addEventListener("paste", function (e) {
+  for (var o = e.clipboardData.items, t = 0; t < o.length; t++) {
+    var a,
+      n = o[t];
+    -1 !== n.type.indexOf("image") &&
+      ((a = n.getAsFile()),
+      $("#uploadFileLabel")
+        .text("已选择剪贴板文件")
+        .css("background-color", "#0056b3"),
+      uploadImg(a));
+  }
+}),
+  $(document).ready(function () {
+    $("#uploadFile").change(function () {
+      var e = $(this).val().split("\\").pop();
+      e
+        ? $("#uploadFileLabel")
+            .text("已选择文件: " + e)
+            .css("background-color", "#0056b3")
+        : $("#uploadFileLabel")
+            .text("选择文件")
+            .css("background-color", "#007BFF");
+    }),
+      $("#uploadButton").click(function () {
+        var e = document.getElementById("uploadFile").files[0];
+        e ? uploadImg(e) : alert("请选择一个文件");
+      });
+  });
+    </script>
+    <a target="_blank" href="https://github.com/csznet/tgState"><svg version="1.1" id="Layer_1"
+            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="44px"
+            height="15px" viewBox="0 0 44 15" enable-background="new 0 0 44 15" xml:space="preserve">
+            <image id="image0" width="44" height="15" x="0" y="0" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAPBAMAAABtkjCqAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAKlBMVEUAAAD/////ZgCZmWb/
+aAT/+vj/agj//fz8/Pr9/f36+vj/+PT/ZwOammiamlTzAAAAAWJLR0QB/wIt3gAAAAlwSFlzAAAL
+EwAACxMBAJqcGAAAAAd0SU1FB+cKAw8uKd154KgAAABtSURBVBjTY2DADhgFsQABBkYlOBA2hgHS
+hR1FlRIFiwQFhYQtjC0sBScvFAQLB6kFBQHVaisJW062sACqbYYIKwFVK+kEKQlbXLxhKQgXVgNK
+BKkCzbYw7kSoVhRVEhRUQpgNFaaGu7GHCXYAAPxWLJi8tpSVAAAAJXRFWHRkYXRlOmNyZWF0ZQAy
+MDIzLTEwLTAzVDE1OjQ2OjQxKzAwOjAwZpEQ6AAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0xMC0w
+M1QxNTo0Njo0MSswMDowMBfMqFQAAAAodEVYdGRhdGU6dGltZXN0YW1wADIwMjMtMTAtMDNUMTU6
+NDY6NDErMDA6MDBA2YmLAAAAAElFTkSuQmCC" />
+        </svg></a>
+</body>
+
+</html>
