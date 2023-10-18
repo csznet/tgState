@@ -15,7 +15,7 @@ import (
 	"csz.net/tgstate/utils"
 )
 
-// 上传文件api
+// UploadImageAPI 上传文件api
 func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if r.Method == http.MethodPost {
@@ -171,14 +171,14 @@ func D(w http.ResponseWriter, r *http.Request) {
 		}
 		_, err = io.Copy(w, resp.Body)
 		if err != nil {
-			http.Error(w, "Failed to show content", http.StatusInternalServerError)
+			//http.Error(w, "Failed to show content", http.StatusInternalServerError)
 			log.Println(http.StatusInternalServerError)
 			return
 		}
 	}
 }
 
-// 首页
+// Index 首页
 func Index(w http.ResponseWriter, r *http.Request) {
 	htmlPath := "templates/images.tmpl"
 	if conf.Mode == "pan" {
@@ -197,6 +197,14 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 读取页脚模板
+	footerPath := "templates/footer.tmpl"
+	footerFile, err := assets.Templates.ReadFile(footerPath)
+	if err != nil {
+		http.Error(w, "Footer template not found", http.StatusNotFound)
+		return
+	}
+
 	// 创建HTML模板并包括头部
 	tmpl := template.New("html")
 	tmpl, err = tmpl.Parse(string(headerFile))
@@ -209,6 +217,13 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	tmpl, err = tmpl.Parse(string(file))
 	if err != nil {
 		http.Error(w, "Error parsing HTML template", http.StatusInternalServerError)
+		return
+	}
+
+	// 包括页脚
+	tmpl, err = tmpl.Parse(string(footerFile))
+	if err != nil {
+		http.Error(w, "Error parsing footer template", http.StatusInternalServerError)
 		return
 	}
 
