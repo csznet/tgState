@@ -60,14 +60,6 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
-
-		// 读取文件内容
-		// fileBytes, err := io.ReadAll(file)
-		// if err != nil {
-		// 	errJsonMsg("Failed to read file", w)
-		// 	// http.Error(w, "Failed to read file", http.StatusInternalServerError)
-		// 	return
-		// }
 		res := conf.UploadResponse{
 			Code:    0,
 			Message: "error",

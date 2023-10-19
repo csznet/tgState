@@ -38,14 +38,14 @@ func UpDocument(fileData tgbotapi.FileReader) string {
 	if err != nil {
 		log.Panic(err)
 	}
-	var msg conf.Message
+	var msg tgbotapi.Message
 	err = json.Unmarshal([]byte(response.Result), &msg)
 	var resp string
-	if msg.Document.FileID != "" {
+	if msg.Document != nil {
 		resp = msg.Document.FileID
-	} else if msg.Audio.FileID != "" {
+	} else if msg.Audio != nil {
 		resp = msg.Audio.FileID
-	} else if msg.Video.FileID != "" {
+	} else if msg.Video != nil {
 		resp = msg.Video.FileID
 	}
 	return resp
