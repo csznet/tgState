@@ -7,6 +7,8 @@ tgState
 
 可以作为telegram图床，也可以作为telegram网盘使用。
 
+搭配CLoudFlare使用：https://www.csz.net/proj/tgstate/
+
 默认运行模式为图床模式，只允许`.jpg .png .jpeg`文件上传且限制不超过20MB，网盘模式为不限制后缀和大小  
 
 如有疑惑，可以咨询TG @tgstate123  
