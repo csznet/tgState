@@ -70,7 +70,7 @@ docker pull csznet/tgstate:latest
 
 启动
 ```
-docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tgstate:latest
+docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb --net=host csznet/tgstate:latest
 ```
 
 请提前将```aaa```和```bbb```替换为你的bot token和频道地址or个人id  
