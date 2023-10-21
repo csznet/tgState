@@ -24,6 +24,19 @@ jobs:
       - name: Download dependencies
         run: go mod tidy
 
+      - name: Build Linux arm64
+        run: |
+          CGO_ENABLED=0 GOARCH=amd64 go build -o tgState main.go
+
+      - name: Zip Linux amd64
+        run: |
+          sudo apt-get install -y zip
+          zip tgState_arm64.zip tgState
+
+      - name: Delete tgState arm64
+        run: |
+          rm tgState
+
       - name: Build Linux amd64
         run: |
           CGO_ENABLED=0 go build -o tgState main.go
@@ -41,6 +54,16 @@ jobs:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./tgState.zip
           asset_name: tgState.zip
+          asset_content_type: application/zip
+
+      - name: Upload server asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./tgState_arm64.zip
+          asset_name: tgState_arm64.zip
           asset_content_type: application/zip
     
       - name: Set up Docker Buildx
