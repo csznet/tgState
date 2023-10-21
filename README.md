@@ -90,6 +90,11 @@ docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb -e MODE=p
  wget https://github.com/csznet/tgState/releases/latest/download/tgState.zip && unzip tgState.zip && rm tgState.zip
  ```
 
+Linux arm64一键脚本：
+ ```
+ wget https://github.com/csznet/tgState/releases/latest/download/tgState_arm64.zip && unzip tgState_arm64.zip && rm tgState_arm64.zip
+ ```
+
  使用方法
 ----
 
