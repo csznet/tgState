@@ -25,7 +25,7 @@ Hosted on Vercel, large files may fail to upload
 
 Test image：
 
-![tgState](https://tgtu.ikun123.com/d/1310.png)  
+![tgState](https://tgstate.vercel.app/d/BQACAgUAAx0EcyK3ugACByxlOR-Nfl4esavoO4zdaYIP_k1KYQACDAsAAkf4yFVpf_awaEkS8jAE)  
 
 **Preparation Instructions
 
