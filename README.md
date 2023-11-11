@@ -49,6 +49,8 @@ tgState
 
 对bot聊天中的文件引用并回复```get```可以获取FileID，搭建地址+/d/+FileID即可访问资源
 
+![image](https://github.com/csznet/tgState/assets/127601663/5b1fd6c0-652c-41de-bb63-e2f20b257022)
+
 
 Vercel部署
 ====
