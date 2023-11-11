@@ -82,16 +82,17 @@ func BotDo() {
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
-
-	updates := bot.GetUpdatesChan(u)
-
-	for update := range updates {
-		if update.Message != nil { // If we got a message
+	updatesChan := bot.GetUpdatesChan(u)
+	for update := range updatesChan {
+		if update.Message != nil {
 			if update.Message.Text == "get" && update.Message.ReplyToMessage.Document.FileID != "" {
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.ReplyToMessage.Document.FileID)
 				msg.ReplyToMessageID = update.Message.MessageID
 				bot.Send(msg)
 			}
+		} else if update.ChannelPost != nil && update.ChannelPost.Text == "get" && update.ChannelPost.ReplyToMessage.Document.FileID != "" {
+			msg := tgbotapi.NewMessage(update.ChannelPost.Chat.ID, update.ChannelPost.ReplyToMessage.Document.FileID)
+			bot.Send(msg)
 		}
 	}
 }

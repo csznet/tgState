@@ -64,6 +64,9 @@ func init() {
 	if conf.ChannelName == "" {
 		conf.ChannelName = os.Getenv("CHANNEL")
 	}
+	if conf.Pass == "" {
+		conf.Pass = os.Getenv("PASS")
+	}
 	if conf.Mode == "" {
 		conf.Mode = os.Getenv("MODE")
 	}
