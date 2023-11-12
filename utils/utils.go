@@ -74,8 +74,6 @@ func BotDo() {
 		log.Println(err)
 		return
 	}
-	bot.Debug = true
-	log.Printf("Authorized on account %s", bot.Self.UserName)
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 	updatesChan := bot.GetUpdatesChan(u)
