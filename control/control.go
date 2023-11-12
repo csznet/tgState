@@ -277,16 +277,13 @@ func Pwd(w http.ResponseWriter, r *http.Request) {
 
 func Middleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// 只有当密码设置并且不为"none"时，才进行检查
 		if conf.Pass != "" && conf.Pass != "none" {
-			// 在这里检查cookie
-			cookie, err := r.Cookie("p")
-			if err != nil || cookie.Value != conf.Pass {
-				// 如果cookie不存在或值不为110，则重定向到/pwd
+			if cookie, err := r.Cookie("p"); err != nil || cookie.Value != conf.Pass {
 				http.Redirect(w, r, "/pwd", http.StatusSeeOther)
 				return
 			}
 		}
-		// 如果cookie值为110，调用下一个处理程序
 		next(w, r)
 	}
 }

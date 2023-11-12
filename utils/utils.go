@@ -22,7 +22,6 @@ func UpDocument(fileData tgbotapi.FileReader) string {
 		log.Panic(err)
 	}
 	bot.Debug = true
-
 	// Upload the file to Telegram
 	params := tgbotapi.Params{
 		"chat_id": conf.ChannelName, // Replace with the chat ID where you want to send the file
@@ -33,7 +32,6 @@ func UpDocument(fileData tgbotapi.FileReader) string {
 			Data: fileData,
 		},
 	}
-
 	response, err := bot.UploadFiles("sendDocument", params, files)
 	if err != nil {
 		log.Panic(err)
