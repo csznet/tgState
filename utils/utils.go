@@ -87,25 +87,19 @@ func BotDo() {
 		if update.ChannelPost != nil {
 			msg = update.ChannelPost
 		}
-		if msg == nil {
-			return
-		}
-		if msg.Text == "get" {
+		if msg != nil && msg.Text == "get" && msg.ReplyToMessage != nil {
 			var fileID string
-			if msg.ReplyToMessage == nil {
-				return
-			}
-			if msg.ReplyToMessage.Document.FileID != "" {
+			if msg.ReplyToMessage.Document != nil && msg.ReplyToMessage.Document.FileID != "" {
 				fileID = msg.ReplyToMessage.Document.FileID
-			} else {
+			}
+			if msg.ReplyToMessage.Video != nil && msg.ReplyToMessage.Video.FileID != "" {
 				fileID = msg.ReplyToMessage.Video.FileID
 			}
-			if fileID == "" {
-				return
+			if fileID != "" {
+				newMsg := tgbotapi.NewMessage(msg.Chat.ID, fileID)
+				newMsg.ReplyToMessageID = msg.MessageID
+				bot.Send(newMsg)
 			}
-			newMsg := tgbotapi.NewMessage(msg.Chat.ID, fileID)
-			newMsg.ReplyToMessageID = msg.MessageID
-			bot.Send(newMsg)
 		}
 	}
 }
