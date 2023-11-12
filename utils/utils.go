@@ -69,30 +69,43 @@ func GetDownloadUrl(fileID string) string {
 	return fileURL
 }
 func BotDo() {
-
 	bot, err := tgbotapi.NewBotAPI(conf.BotToken)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-
 	bot.Debug = true
-
 	log.Printf("Authorized on account %s", bot.Self.UserName)
-
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 	updatesChan := bot.GetUpdatesChan(u)
 	for update := range updatesChan {
+		var msg *tgbotapi.Message
 		if update.Message != nil {
-			if update.Message.Text == "get" && update.Message.ReplyToMessage.Document.FileID != "" {
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.ReplyToMessage.Document.FileID)
-				msg.ReplyToMessageID = update.Message.MessageID
-				bot.Send(msg)
+			msg = update.Message
+		}
+		if update.ChannelPost != nil {
+			msg = update.ChannelPost
+		}
+		if msg == nil {
+			return
+		}
+		if msg.Text == "get" {
+			var fileID string
+			if msg.ReplyToMessage == nil {
+				return
 			}
-		} else if update.ChannelPost != nil && update.ChannelPost.Text == "get" && update.ChannelPost.ReplyToMessage.Document.FileID != "" {
-			msg := tgbotapi.NewMessage(update.ChannelPost.Chat.ID, update.ChannelPost.ReplyToMessage.Document.FileID)
-			bot.Send(msg)
+			if msg.ReplyToMessage.Document.FileID != "" {
+				fileID = msg.ReplyToMessage.Document.FileID
+			} else {
+				fileID = msg.ReplyToMessage.Video.FileID
+			}
+			if fileID == "" {
+				return
+			}
+			newMsg := tgbotapi.NewMessage(msg.Chat.ID, fileID)
+			newMsg.ReplyToMessageID = msg.MessageID
+			bot.Send(newMsg)
 		}
 	}
 }
