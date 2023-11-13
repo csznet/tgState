@@ -20,12 +20,11 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if r.Method == http.MethodPost {
 		// 解析上传的文件
-		err := r.ParseMultipartForm(5 * 1024 * 1024) // 限制上传文件大小为 5MB
-		if err != nil {
+		if err := r.ParseMultipartForm(5 * 1024 * 1024); err != nil {
 			errJsonMsg("Unable to parse form", w)
 			// http.Error(w, "Unable to parse form", http.StatusBadRequest)
 			return
-		}
+		} // 限制上传文件大小为 5MB
 
 		// 获取上传的文件
 		file, header, err := r.FormFile("image")
@@ -35,13 +34,10 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		defer file.Close()
-		if conf.Mode != "pan" {
+		if conf.Mode != "pan" && r.ContentLength > 20*1024*1024 {
 			// 检查文件大小
-			fileSize := r.ContentLength
-			if fileSize > 20*1024*1024 {
-				errJsonMsg("File size exceeds 20MB limit", w)
-				return
-			}
+			errJsonMsg("File size exceeds 20MB limit", w)
+			return
 		}
 		// 检查文件类型
 		allowedExts := []string{".jpg", ".jpeg", ".png"}
@@ -53,12 +49,10 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 		}
-		if conf.Mode != "pan" {
-			if !valid {
-				errJsonMsg("Invalid file type. Only .jpg, .jpeg, and .png are allowed.", w)
-				// http.Error(w, "Invalid file type. Only .jpg, .jpeg, and .png are allowed.", http.StatusBadRequest)
-				return
-			}
+		if conf.Mode != "pan" && !valid {
+			errJsonMsg("Invalid file type. Only .jpg, .jpeg, and .png are allowed.", w)
+			// http.Error(w, "Invalid file type. Only .jpg, .jpeg, and .png are allowed.", http.StatusBadRequest)
+			return
 		}
 		res := conf.UploadResponse{
 			Code:    0,
@@ -245,23 +239,21 @@ func Pwd(w http.ResponseWriter, r *http.Request) {
 
 		// 创建HTML模板并包括头部
 		tmpl := template.New("html")
-		tmpl, err = tmpl.Parse(string(headerFile))
-		if err != nil {
-			http.Error(w, "Error parsing header template", http.StatusInternalServerError)
+		if tmpl, err = tmpl.Parse(string(headerFile)); err != nil {
+			http.Error(w, "Error parsing Header template", http.StatusInternalServerError)
 			return
 		}
 
 		// 包括主HTML内容
-		tmpl, err = tmpl.Parse(string(file))
-		if err != nil {
-			http.Error(w, "Error parsing HTML template", http.StatusInternalServerError)
+		if tmpl, err = tmpl.Parse(string(file)); err != nil {
+			http.Error(w, "Error parsing File template", http.StatusInternalServerError)
 			return
 		}
 
 		// 直接将HTML内容发送给客户端
 		w.Header().Set("Content-Type", "text/html")
 		err = tmpl.Execute(w, nil)
-		if err != nil {
+		if err := tmpl.Execute(w, nil); err != nil {
 			http.Error(w, "Error rendering HTML template", http.StatusInternalServerError)
 		}
 		return
