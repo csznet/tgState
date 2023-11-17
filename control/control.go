@@ -54,6 +54,9 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 			// http.Error(w, "Invalid file type. Only .jpg, .jpeg, and .png are allowed.", http.StatusBadRequest)
 			return
 		}
+		if ext == "wepb" {
+			header.Filename = "tgstate.wp"
+		}
 		res := conf.UploadResponse{
 			Code:    0,
 			Message: "error",
@@ -63,6 +66,10 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 		res = conf.UploadResponse{
 			Code:    1,
 			Message: img,
+		}
+		if img == "/d/" {
+			res.Code = 0
+			res.Message = "无法连接Telegram服务器"
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)

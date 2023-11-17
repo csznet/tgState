@@ -19,7 +19,8 @@ func TgFileData(fileName string, fileData io.Reader) tgbotapi.FileReader {
 func UpDocument(fileData tgbotapi.FileReader) string {
 	bot, err := tgbotapi.NewBotAPI(conf.BotToken)
 	if err != nil {
-		log.Panic(err)
+		log.Println(err)
+		return ""
 	}
 	bot.Debug = true
 	// Upload the file to Telegram
@@ -63,7 +64,6 @@ func GetDownloadUrl(fileID string) string {
 
 	// 获取文件下载链接
 	fileURL := file.Link(conf.BotToken)
-	// log.Printf("File Download URL: %s", fileURL)
 	return fileURL
 }
 func BotDo() {
