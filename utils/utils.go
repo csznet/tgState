@@ -85,13 +85,12 @@ func BotDo() {
 		}
 		if msg != nil && msg.Text == "get" && msg.ReplyToMessage != nil {
 			var fileID string
-			if msg.ReplyToMessage.Document != nil && msg.ReplyToMessage.Document.FileID != "" {
+			switch {
+			case msg.ReplyToMessage.Document != nil && msg.ReplyToMessage.Document.FileID != "":
 				fileID = msg.ReplyToMessage.Document.FileID
-			}
-			if msg.ReplyToMessage.Video != nil && msg.ReplyToMessage.Video.FileID != "" {
+			case msg.ReplyToMessage.Video != nil && msg.ReplyToMessage.Video.FileID != "":
 				fileID = msg.ReplyToMessage.Video.FileID
-			}
-			if msg.ReplyToMessage.Sticker != nil && msg.ReplyToMessage.Sticker.FileID != "" {
+			case msg.ReplyToMessage.Sticker != nil && msg.ReplyToMessage.Sticker.FileID != "":
 				fileID = msg.ReplyToMessage.Sticker.FileID
 			}
 			if fileID != "" {
