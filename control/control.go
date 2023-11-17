@@ -59,8 +59,8 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 			Message: "error",
 		}
 		var img string
-		img = "/d/" + utils.UpDocument(utils.TgFileData(header.Filename, file))
-		if img != "/d/" {
+		img = conf.FileRoute + utils.UpDocument(utils.TgFileData(header.Filename, file))
+		if img != conf.FileRoute {
 			res = conf.UploadResponse{
 				Code:    1,
 				Message: img,
@@ -87,7 +87,7 @@ func errJsonMsg(msg string, w http.ResponseWriter) {
 }
 func D(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
-	id := strings.TrimPrefix(path, "/d/")
+	id := strings.TrimPrefix(path, conf.FileRoute)
 	if id == "" {
 		// 设置响应的状态码为 404
 		w.WriteHeader(http.StatusNotFound)
