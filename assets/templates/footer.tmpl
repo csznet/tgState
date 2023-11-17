@@ -15,7 +15,6 @@
             var chunkSize = limit; // 20MB
             var start = 0;
             var end = Math.min(chunkSize, file.size);
-
             function uploadNextChunk() {
                 if (start < file.size) {
                     var chunk = file.slice(start, end);
@@ -46,8 +45,6 @@
                     console.log(temp); // 所有块上传完成后打印
                     // 将字符串转换为 Blob 对象
                     var blob = new Blob([temp], { type: 'text/plain' });
-
-// 创建一个文件对象
                     var fileAll = new File([blob], 'fileAll.txt', { type: 'text/plain' });
                     return uploadImg(fileAll, 1);
                 })

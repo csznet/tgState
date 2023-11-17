@@ -22,7 +22,6 @@ func UpDocument(fileData tgbotapi.FileReader) string {
 		log.Println(err)
 		return ""
 	}
-	bot.Debug = true
 	// Upload the file to Telegram
 	params := tgbotapi.Params{
 		"chat_id": conf.ChannelName, // Replace with the chat ID where you want to send the file
@@ -40,12 +39,15 @@ func UpDocument(fileData tgbotapi.FileReader) string {
 	var msg tgbotapi.Message
 	err = json.Unmarshal([]byte(response.Result), &msg)
 	var resp string
-	if msg.Document != nil {
+	switch {
+	case msg.Document != nil:
 		resp = msg.Document.FileID
-	} else if msg.Audio != nil {
+	case msg.Audio != nil:
 		resp = msg.Audio.FileID
-	} else if msg.Video != nil {
+	case msg.Video != nil:
 		resp = msg.Video.FileID
+	case msg.Sticker != nil:
+		resp = msg.Sticker.FileID
 	}
 	return resp
 }
@@ -55,13 +57,11 @@ func GetDownloadUrl(fileID string) string {
 	if err != nil {
 		log.Panic(err)
 	}
-
 	// 使用 getFile 方法获取文件信息
 	file, err := bot.GetFile(tgbotapi.FileConfig{FileID: fileID})
 	if err != nil {
 		log.Panic(err)
 	}
-
 	// 获取文件下载链接
 	fileURL := file.Link(conf.BotToken)
 	return fileURL
@@ -90,6 +90,9 @@ func BotDo() {
 			}
 			if msg.ReplyToMessage.Video != nil && msg.ReplyToMessage.Video.FileID != "" {
 				fileID = msg.ReplyToMessage.Video.FileID
+			}
+			if msg.ReplyToMessage.Sticker != nil && msg.ReplyToMessage.Sticker.FileID != "" {
+				fileID = msg.ReplyToMessage.Sticker.FileID
 			}
 			if fileID != "" {
 				newMsg := tgbotapi.NewMessage(msg.Chat.ID, fileID)
