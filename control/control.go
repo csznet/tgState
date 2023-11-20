@@ -58,8 +58,7 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 			Code:    0,
 			Message: "error",
 		}
-		var img string
-		img = conf.FileRoute + utils.UpDocument(utils.TgFileData(header.Filename, file))
+		img := conf.FileRoute + utils.UpDocument(utils.TgFileData(header.Filename, file))
 		if img != conf.FileRoute {
 			res = conf.UploadResponse{
 				Code:    1,
@@ -103,7 +102,6 @@ func D(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer resp.Body.Close()
-	rType := resp.Header.Get("Content-Type")
 	w.Header().Set("Content-Disposition", "inline") // 设置为 "inline" 以支持在线播放
 	// 检查Content-Type是否为图片类型
 	if !strings.HasPrefix(resp.Header.Get("Content-Type"), "application/octet-stream") {
@@ -148,8 +146,7 @@ func D(w http.ResponseWriter, r *http.Request) {
 
 	} else {
 		// 使用DetectContentType函数检测文件类型
-		rType = http.DetectContentType(buffer)
-		w.Header().Set("Content-Type", rType)
+		w.Header().Set("Content-Type", http.DetectContentType(buffer))
 		// 写入前512个字节到响应w
 		_, err = w.Write(buffer[:n])
 		if err != nil {
@@ -178,16 +175,14 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// 读取头部模板
-	headerPath := "templates/header.tmpl"
-	headerFile, err := assets.Templates.ReadFile(headerPath)
+	headerFile, err := assets.Templates.ReadFile("templates/header.tmpl")
 	if err != nil {
 		http.Error(w, "Header template not found", http.StatusNotFound)
 		return
 	}
 
 	// 读取页脚模板
-	footerPath := "templates/footer.tmpl"
-	footerFile, err := assets.Templates.ReadFile(footerPath)
+	footerFile, err := assets.Templates.ReadFile("templates/footer.tmpl")
 	if err != nil {
 		http.Error(w, "Footer template not found", http.StatusNotFound)
 		return
@@ -232,8 +227,7 @@ func Pwd(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		// 读取头部模板
-		headerPath := "templates/header.tmpl"
-		headerFile, err := assets.Templates.ReadFile(headerPath)
+		headerFile, err := assets.Templates.ReadFile("templates/header.tmpl")
 		if err != nil {
 			http.Error(w, "Header template not found", http.StatusNotFound)
 			return
@@ -254,7 +248,6 @@ func Pwd(w http.ResponseWriter, r *http.Request) {
 
 		// 直接将HTML内容发送给客户端
 		w.Header().Set("Content-Type", "text/html")
-		err = tmpl.Execute(w, nil)
 		if err := tmpl.Execute(w, nil); err != nil {
 			http.Error(w, "Error rendering HTML template", http.StatusInternalServerError)
 		}
