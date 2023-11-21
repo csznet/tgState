@@ -37,7 +37,7 @@ func UpDocument(fileData tgbotapi.FileReader) string {
 		log.Panic(err)
 	}
 	var msg tgbotapi.Message
-	err = json.Unmarshal([]byte(response.Result), &msg)
+	json.Unmarshal([]byte(response.Result), &msg)
 	var resp string
 	switch {
 	case msg.Document != nil:

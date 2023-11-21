@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
-	"regexp"
 	"strings"
+	"time"
 
 	"csz.net/tgstate/assets"
 	"csz.net/tgstate/conf"
@@ -112,9 +112,9 @@ func D(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// 读取前512个字节以用于文件类型检测
-	buffer := make([]byte, 512)
+	buffer := make([]byte, 10*1024*1024)
 	n, err := resp.Body.Read(buffer)
-	if err != nil {
+	if err != nil && err != io.ErrUnexpectedEOF {
 		log.Println("读取响应主体数据时发生错误:", err)
 		return
 	}
@@ -122,28 +122,25 @@ func D(w http.ResponseWriter, r *http.Request) {
 	if string(buffer[:12]) == "tgstate-blob" {
 		content := string(buffer)
 		lines := strings.Fields(content)
-		log.Println("这是一个分块文件,文件名:" + lines[1])
+		log.Println("分块文件:" + lines[1])
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.Header().Set("Content-Disposition", "attachment; filename=\""+lines[1]+"\"")
 		for i := 2; i < len(lines); i++ {
-			blobResp, err := http.Get(utils.GetDownloadUrl(regexp.MustCompile("[^a-zA-Z0-9_-]").ReplaceAllString(lines[i], "")))
+			blobResp, err := http.Get(utils.GetDownloadUrl(strings.ReplaceAll(lines[i], " ", "")))
 			if err != nil {
 				http.Error(w, "Failed to fetch content", http.StatusInternalServerError)
 				return
 			}
-
 			// 将文件名设置到Content-Disposition标头
 			blobResp.Header.Set("Content-Disposition", "attachment; filename=\""+lines[1]+"\"")
-
 			defer blobResp.Body.Close()
-
 			_, err = io.Copy(w, blobResp.Body)
 			if err != nil {
 				log.Println("写入响应主体数据时发生错误:", err)
 				return
 			}
 		}
-
+		time.Sleep(10 * time.Second)
 	} else {
 		// 使用DetectContentType函数检测文件类型
 		w.Header().Set("Content-Type", http.DetectContentType(buffer))
