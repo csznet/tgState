@@ -1,117 +1,142 @@
-tgState
+# tgState
 ==
 
 [中文](https://github.com/csznet/tgState/blob/main/README.md)
 
+A file external link system using Telegram as storage.
 
-A file external link system that uses Telegram as storage.
+No restrictions on file size and format.
 
-It can be used as a Telegram image hosting service or as a Telegram cloud storage.
+Can be used as a Telegram image hosting service or a Telegram cloud drive.
 
-The default operating mode is image hosting mode, which only allows the upload of .jpg, .png, and .jpeg files with a maximum size limit of 20MB. In contrast, the cloud storage mode has no restrictions on file extensions or file sizes.
+Supports web and Telegram direct file uploads.
 
-If you have any questions or concerns, feel free to reach out to us on Telegram at @tgstate123.
+Use with CloudFlare: https://www.csz.net/proj/tgstate/
 
-**Features**
- - No file size limit (optional)
- - Support for access password restrictions
- - Provides API
- - Supports one-click deployment on Vercel
+For any questions, consult TG @tgstate123
 
-**Demo**
+# Demo
 
-https://tgtu.ikun123.com/  
-Hosted on Vercel, large files may fail to upload 
+https://tgstate.vercel.app / https://tgstate.ikun123.com/
 
-Test image：
+Hosted on Vercel, resource limitations - files larger than 5MB are not supported.
 
-![tgState](https://tgstate.vercel.app/d/BQACAgUAAx0EcyK3ugACByxlOR-Nfl4esavoO4zdaYIP_k1KYQACDAsAAkf4yFVpf_awaEkS8jAE)  
+Demo image:
 
-**Preparation Instructions
+![tgState](https://tgstate.vercel.app/d/BQACAgUAAx0EcyK3ugACByxlOR-Nfl4esavoO4zdaYIP_k1KYQACDAsAAkf4yFVpf_awaEkS8jAE)
 
-**
-Before deployment, you need to prepare a Telegram Bot (apply at @botfather).
-If you need to store files in a channel, you need to add the Bot to the channel as an administrator, make the channel public, and customize the channel link.
+# Parameter Description
 
-Vercel Deployment
-====
+Mandatory parameters:
 
- [Click here to go to the Vercel configuration page](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=channel&env=pass&env=mode&project-name=tgState&repository-name=tgState)  
+- target
+- token
 
- 1. Fill in your bot `token`
- 2. `channel`` can be a channel (@xxxx) or your Telegram ID (use @getmyid_bot to obtain)  
- 3. Fill in the access password for `pass`, if not needed, simply enter `none`
- 4. Fill in `mode` as `pan` to run in cloud storage mode, or enter anything for image hosting mode   
+Optional parameters:
 
-Docker Deployment
-====
+- pass
+- mode
+- url
+- port
 
-Pull the image:
-```
-docker pull csznet/tgstate:latest
-```
+## target
 
-Start the container:
-```
-docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb csznet/tgstate:latest
-```
+The target can be a channel, group, or individual.
 
-Replace aaa and bbb with your bot token and channel address or personal ID.  
+When the target is a channel, the bot needs to be added to the channel as an administrator, make the channel public, and customize the channel link. The target value should be filled with the link, such as @xxxx.
 
-If you need to run in cloud storage mode:
+When the target is a group, the bot needs to be added to the group, make the group public, and customize the group link. The target value should be filled with the link, such as @xxxx.
 
-```
-docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb -e MODE=pan csznet/tgstate:latest
-```
+When the target is an individual, it is the Telegram ID (obtained from @getmyid_bot).
 
+## token
 
- Binary Deployment
-====
-Download the binary file for Linux amd64:
- ```
- wget https://github.com/csznet/tgState/releases/latest/download/tgState.zip
- ```
+Fill in your bot token.
 
-Unzip the file:
+## pass
 
+Fill in the access password. If not needed, fill in ```none``` directly.
 
- 
- ```
- unzip tgState.zip && rm tgState.zip
- ```
-Usage
-----
+## mode
 
-```
- ./tgState -token xxxx -channel @xxxx
-```
+- ```p``` represents running in cloud drive mode, with no restriction on uploaded suffixes.
+- ```m``` On top of the p mode, web upload is disabled, and upload can be done via private chat (if the target is an individual, only specified users can upload via private chat).
 
-Replace `xxxx` with your bot token and `@xxxx` with the channel address or personal ID (for personal IDs, only use numbers without @).
+## url
 
-To customize the port, use the `-port` parameter, for example:
-```
--port 8888
-```
-If you don't need the homepage and only want the API and image display page, use the `-index` parameter, like this:
-```
-./tgState -token xxxx -channel @xxxx -port 8888 -index
-```  
-To enable password protection, use the `-pass` parameter, for example, to set the password as `csznet`:
-```
-./tgState -token xxxx -channel @xxxx -port 8888 -pass csznet
-```
+The pre-domain address that bot obtains FileID is automatically filled in.
 
-For cloud storage mode, use the `-mode pan` parameter, like this:
+## port
+
+Customize the running port.
+
+# Management
+
+## Get FIleID
+
+Replying with ```get``` to the file reference in the bot's chat can get the FileID. Access the resource by combining the built address and the obtained path.
+
+If the url parameter is configured, the complete address will be returned directly.
+
+![image](https://github.com/csznet/tgState/assets/127601663/5b1fd6c0-652c-41de-bb63-e2f20b257022)
+
+# Deployment
+
+## Binary
+
+Download for Linux amd64
 
 ```
-./tgState -token xxxx -channel @xxxx -port 8888 -mode pan
+wget https://github.com/csznet/tgState/releases/latest/download/tgState.zip && unzip tgState.zip && rm tgState.zip
 ```
 
-About the API   
-====
+Download for Linux arm64
 
-**Method:** POST
+```
+wget https://github.com/csznet/tgState/releases/latest/download/tgState_arm64.zip && unzip tgState_arm64.zip && rm tgState_arm64.zip
+```
 
-**Path:** /api
+**Usage**
 
-**Form data:** Field name is "image", content is binary data
+```./tgState parameters```
+
+**Example**
+
+```./tgState -token xxxx -target @xxxx```
+
+**Run in the background**
+
+```nohup ./tgState parameters &```
+
+## Docker
+
+Pull the image
+
+```docker pull csznet/tgstate:latest```
+
+
+Start
+
+```
+docker run -d -p 8088:8088 --name tgstate parameters --net=host csznet/tgstate:latest
+```
+
+Where docker parameters need to be set as environment variables.
+
+**Example**
+
+```
+docker run -d -p 8088:8088 --name tgstate -e token=aaa -e target=@bbb --net=host csznet/tgstate:latest
+```
+
+## Vercel
+
+Does not support files larger than 5MB and does not support Telegram in getting file paths.
+
+[Click here to go to the Vercel configuration page](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=target&env=pass&env=mode&project-name=tgState&repository-name=tgState)
+
+# API Description
+
+POST method to the path ```/api```
+
+Form transmission, field name is image, content is binary data.
