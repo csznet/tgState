@@ -106,7 +106,7 @@ wget https://github.com/csznet/tgState/releases/latest/download/tgState_arm64.zi
 **后台运行**
 
 ```
-nohup ./tgstate 参数 &
+nohup ./tgState 参数 &
 ```
 
 ## Docker
