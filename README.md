@@ -23,12 +23,12 @@ https://tgstate.vercel.app / https://tgstate.ikun123.com/
 
 # 参数说明
 
-目前必填参数为
+必填参数
 
  - target
  - token
 
-可选参数为
+可选参数
 
  - pass
  - mode
