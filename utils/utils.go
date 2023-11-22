@@ -76,8 +76,7 @@ func BotDo() {
 	}
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
-	updatesChan := bot.GetUpdatesChan(u)
-	for update := range updatesChan {
+	for update := range bot.GetUpdatesChan(u) {
 		var msg *tgbotapi.Message
 		if update.Message != nil {
 			msg = update.Message
@@ -99,7 +98,7 @@ func BotDo() {
 				newMsg := tgbotapi.NewMessage(msg.Chat.ID, strings.TrimSuffix(conf.BaseUrl, "/")+"/d/"+fileID)
 				newMsg.ReplyToMessageID = msg.MessageID
 				if !strings.HasPrefix(conf.ChannelName, "@") {
-					if man, err := strconv.Atoi(conf.ChannelName); err == nil && newMsg.ReplyToMessageID == man {
+					if man, err := strconv.ParseInt(conf.ChannelName, 10, 64); err == nil && msg.Chat.ID == man {
 						bot.Send(newMsg)
 					}
 				} else {
