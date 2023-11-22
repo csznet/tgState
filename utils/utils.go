@@ -96,7 +96,7 @@ func BotDo() {
 				fileID = msg.ReplyToMessage.Sticker.FileID
 			}
 			if fileID != "" {
-				newMsg := tgbotapi.NewMessage(msg.Chat.ID, conf.BaseUrl+fileID)
+				newMsg := tgbotapi.NewMessage(msg.Chat.ID, conf.BaseUrl+"/d/"+fileID)
 				newMsg.ReplyToMessageID = msg.MessageID
 				if !strings.HasPrefix(conf.ChannelName, "@") {
 					man, err := strconv.Atoi(conf.ChannelName)
