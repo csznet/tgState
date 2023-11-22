@@ -11,6 +11,8 @@ tgState
 
 默认运行模式为图床模式，只允许`.jpg .png .jpeg`文件上传且限制不超过20MB，网盘模式为不限制后缀和大小  
 
+支持发送文件给bot，bot返回下载地址
+
 如有疑惑，可以咨询TG @tgstate123  
 
 **版本说明**  
@@ -38,6 +40,7 @@ tgState
 **准备说明**
 部署前需要准备一个Telegram Bot(@botfather处申请)  
 如果是需要存储在频道，则需要将Bot拉入频道作为管理员，公开频道并自定义频道Link  
+如果储存在群组，需要将Bot拉入，公开频道并自定义频道Link  
 
 后台管理
 ===
@@ -75,7 +78,7 @@ docker pull csznet/tgstate:latest
 docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb --net=host csznet/tgstate:latest
 ```
 
-请提前将```aaa```和```bbb```替换为你的bot token和频道地址or个人id  
+请提前将```aaa```和```bbb```替换为你的bot token和频道地址群组地址or个人id  
 
 如果需要以网盘模式启动  
 
@@ -104,7 +107,7 @@ Linux arm64一键脚本：
  ./tgState -token xxxx -channel @xxxx
 ```
 
-其中的```xxxx```为bot token ```@xxxx```为频道地址or个人id(个人ID只需要数字不需要@)
+其中的```xxxx```为bot token ```@xxxx```为频道地址群组地址or个人id(个人ID只需要数字不需要@)
 
 如果需要自定义端口，可以带上-port参数，如
 ```
