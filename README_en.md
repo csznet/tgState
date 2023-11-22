@@ -110,4 +110,8 @@ For cloud storage mode, use the `-mode pan` parameter, like this:
 About the API   
 ====
 
-Send file data directly as binary to the `/api` path.
+**Method:** POST
+
+**Path:** /api
+
+**Form data:** Field name is "image", content is binary data
