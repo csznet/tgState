@@ -144,7 +144,6 @@ func D(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// 使用DetectContentType函数检测文件类型
 		w.Header().Set("Content-Type", http.DetectContentType(buffer))
-		// 写入前512个字节到响应w
 		_, err = w.Write(buffer[:n])
 		if err != nil {
 			http.Error(w, "Failed to write content", http.StatusInternalServerError)
@@ -153,7 +152,6 @@ func D(w http.ResponseWriter, r *http.Request) {
 		}
 		_, err = io.Copy(w, resp.Body)
 		if err != nil {
-			//http.Error(w, "Failed to show content", http.StatusInternalServerError)
 			log.Println(http.StatusInternalServerError)
 			return
 		}
