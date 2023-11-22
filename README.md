@@ -5,6 +5,8 @@ tgState
 
 一款以Telegram作为储存的文件外链系统
 
+不限制文件大小和格式
+
 可以作为telegram图床，也可以作为telegram网盘使用。
 
 支持web上传文件和telegram直接上传
