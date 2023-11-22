@@ -9,64 +9,107 @@ tgState
 
 搭配CLoudFlare使用：https://www.csz.net/proj/tgstate/
 
-默认运行模式为图床模式，只允许`.jpg .png .jpeg`文件上传且限制不超过20MB，网盘模式为不限制后缀和大小  
-
-支持发送文件给bot，bot返回下载地址
-
 如有疑惑，可以咨询TG @tgstate123  
 
-**版本说明**  
- - 1.2版本开始采用file_id形式留存外链，对以往版本外链不兼容，需要保留外链的谨慎更新  
- - 1.1版本开始只保留/d外链，对以往版本外链不兼容，需要保留外链的谨慎更新  
+# 演示
 
-**特性**
- - 不限制上传文件大小（可选
- - 支持访问密码限制
- - 提供API
- - 支持Vercel一键搭建
+https://tgstate.vercel.app / https://tgstate.ikun123.com/
 
-**Demo**
+搭建在vercel，资源限制，大于5MB的文件不支持
 
-实时预览：https://tgstate.vercel.app / https://tgstate.ikun123.com/
-
-
-旧版本：https://tgtu.ikun123.com/  
-搭建在Vercel，大于5MB的文件不支持
-
-测试图片：
+演示图片：
 
 ![tgState](https://tgstate.vercel.app/d/BQACAgUAAx0EcyK3ugACByxlOR-Nfl4esavoO4zdaYIP_k1KYQACDAsAAkf4yFVpf_awaEkS8jAE)  
 
-**准备说明**
-部署前需要准备一个Telegram Bot(@botfather处申请)  
-如果是需要存储在频道，则需要将Bot拉入频道作为管理员，公开频道并自定义频道Link  
-如果储存在群组，需要将Bot拉入，公开频道并自定义频道Link  
+# 参数说明
 
-后台管理
-===
+目前必填参数为
 
-后台管理计划是全Telegram管理，Vercel目前不支持，目前实现的有：  
+ - target
+ - token
 
-获取FileID
----
+可选参数为
+
+ - pass
+ - mode
+ - url
+ - port
+
+## target
+
+目标可为频道、群组、个人
+
+当目标为频道时，需要将Bot拉入频道作为管理员，公开频道并自定义频道Link，target值填写Link，如@xxxx
+
+当目标为群组时，需要将Bot拉入群组，公开群组并自定义群组Link，target值填写Link，如@xxxx
+
+当目标为个人时，则为telegram id(@getmyid_bot获取)
+
+## token
+
+填写你的bot token
+
+## pass
+
+填写访问密码，如不需要，直接填写```none```即可
+
+## mode
+
+ - ```p``` 代表网盘模式运行，不限制上传后缀
+ - ```m``` 在p模式的基础上关闭网页上传，可私聊进行上传（如果target是个人，则只支持指定用户进行私聊上传
+
+## url
+
+bot获取FileID的前置域名地址自动补充
+
+## port
+
+自定义运行端口
+
+# 管理
+
+## 获取FIleID
 
 对bot聊天中的文件引用并回复```get```可以获取FileID，搭建地址+/d/+FileID即可访问资源
 
+如果配置了url参数，会直接返回完整的地址
+
 ![image](https://github.com/csznet/tgState/assets/127601663/5b1fd6c0-652c-41de-bb63-e2f20b257022)
 
+# 部署
 
-Vercel部署
-====
+## 二进制
 
- [点我传送至Vercel配置页面](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=channel&env=pass&env=mode&project-name=tgState&repository-name=tgState)  
+Linux amd64下载
 
- 1. ```token```填写你的bot token  
- 2. ```channel```可以为频道(@xxxx)，也可以为你的telegram id(@getmyid_bot获取)  
- 3. ```pass```填写访问密码，如不需要，直接填写```none```即可
- 4. ```mode```填写```pan```，代表以网盘模式运行,只需要以图床模式运行的话就随便填    
+```
+wget https://github.com/csznet/tgState/releases/latest/download/tgState.zip && unzip tgState.zip && rm tgState.zip
+```
 
- Docker部署
-====
+Linux arm64下载
+
+```
+wget https://github.com/csznet/tgState/releases/latest/download/tgState_arm64.zip && unzip tgState_arm64.zip && rm tgState_arm64.zip
+```
+
+**使用方法**
+
+```
+ ./tgState 参数
+```
+
+**例子**
+```
+ ./tgState -token xxxx -target @xxxx
+```
+
+**后台运行**
+
+```
+nohup ./tgstate 参数 &
+```
+
+## Docker
 
 pull镜像
 ```
@@ -75,63 +118,20 @@ docker pull csznet/tgstate:latest
 
 启动
 ```
-docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb --net=host csznet/tgstate:latest
+docker run -d -p 8088:8088 --name tgstate 参数 --net=host csznet/tgstate:latest
+```
+其中docker的参数需要设置为环境变量
+**例子**
+```
+docker run -d -p 8088:8088 --name tgstate -e token=aaa -e target=@bbb --net=host csznet/tgstate:latest
 ```
 
-请提前将```aaa```和```bbb```替换为你的bot token和频道地址群组地址or个人id  
+## Vercel
 
-如果需要以网盘模式启动  
+ [点我传送至Vercel配置页面](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=target&env=pass&env=mode&project-name=tgState&repository-name=tgState)  
 
-```
-docker run -d -p 8088:8088 --name tgstate -e TOKEN=aaa -e CHANNEL=@bbb -e MODE=pan csznet/tgstate:latest
-```
+# API说明
 
-
- 二进制部署
-====
- 下载Linux amd64环境的二进制文件
- 
- ```
- wget https://github.com/csznet/tgState/releases/latest/download/tgState.zip && unzip tgState.zip && rm tgState.zip
- ```
-
-Linux arm64一键脚本：
- ```
- wget https://github.com/csznet/tgState/releases/latest/download/tgState_arm64.zip && unzip tgState_arm64.zip && rm tgState_arm64.zip
- ```
-
- 使用方法
-----
-
-```
- ./tgState -token xxxx -channel @xxxx
-```
-
-其中的```xxxx```为bot token ```@xxxx```为频道地址群组地址or个人id(个人ID只需要数字不需要@)
-
-如果需要自定义端口，可以带上-port参数，如
-```
--port 8888
-```
-如果不需要首页，只需要API和图片展示页面，则带上-index参数，如
-```
-./tgState -token xxxx -channel @xxxx -port 8888 -index
-```  
-如果需要限制密码访问，只需要带上-pass参数即可，如设置密码为csznet：  
-```
-./tgState -token xxxx -channel @xxxx -port 8888 -pass csznet
-```
-
-如果需要网盘模式运行，请带上-mode pan，如  
-
-```
-./tgState -token xxxx -channel @xxxx -port 8888 -mode pan
-```
-
-关于API  
-====
-POST形式
-
-路径：```/api```
+POST方法到路径```/api```
 
 表单传输，字段名为image，内容为二进制数据

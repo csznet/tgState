@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io"
 	"log"
+	"strconv"
+	"strings"
 
 	"csz.net/tgstate/conf"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -94,9 +96,16 @@ func BotDo() {
 				fileID = msg.ReplyToMessage.Sticker.FileID
 			}
 			if fileID != "" {
-				newMsg := tgbotapi.NewMessage(msg.Chat.ID, fileID)
+				newMsg := tgbotapi.NewMessage(msg.Chat.ID, conf.BaseUrl+fileID)
 				newMsg.ReplyToMessageID = msg.MessageID
-				bot.Send(newMsg)
+				if !strings.HasPrefix(conf.ChannelName, "@") {
+					man, err := strconv.Atoi(conf.ChannelName)
+					if err == nil && newMsg.ReplyToMessageID == man {
+						bot.Send(newMsg)
+					}
+				} else {
+					bot.Send(newMsg)
+				}
 			}
 		}
 	}

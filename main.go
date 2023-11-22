@@ -13,7 +13,7 @@ import (
 )
 
 var webPort string
-var index = true
+var OptApi = true
 
 func main() {
 	//判断是否设置参数
@@ -26,12 +26,12 @@ func main() {
 }
 
 func web() {
-	if conf.Pass != "" && conf.Pass != "none" {
-		http.HandleFunc("/pwd", control.Pwd)
-	}
 	http.HandleFunc(conf.FileRoute, control.D)
-	http.HandleFunc("/api", control.Middleware(control.UploadImageAPI))
-	if index {
+	if OptApi {
+		if conf.Pass != "" && conf.Pass != "none" {
+			http.HandleFunc("/pwd", control.Pwd)
+		}
+		http.HandleFunc("/api", control.Middleware(control.UploadImageAPI))
 		http.HandleFunc("/", control.Middleware(control.Index))
 	}
 
@@ -48,10 +48,14 @@ func web() {
 
 func init() {
 	flag.StringVar(&webPort, "port", "8088", "Web Port")
-	flag.StringVar(&conf.BotToken, "token", os.Getenv("TOKEN"), "Bot Token")
-	flag.StringVar(&conf.ChannelName, "channel", os.Getenv("CHANNEL"), "Channel Name")
-	flag.StringVar(&conf.Pass, "pass", os.Getenv("PASS"), "Visit Password")
-	flag.StringVar(&conf.Mode, "mode", os.Getenv("MODE"), "Run mode")
-	flag.BoolVar(&index, "index", true, "Show Index")
+	flag.StringVar(&conf.BotToken, "token", os.Getenv("token"), "Bot Token")
+	flag.StringVar(&conf.ChannelName, "target", os.Getenv("target"), "Channel Name or ID")
+	flag.StringVar(&conf.Pass, "pass", os.Getenv("pass"), "Visit Password")
+	flag.StringVar(&conf.Mode, "mode", os.Getenv("mode"), "Run mode")
+	flag.StringVar(&conf.BaseUrl, "url", os.Getenv("url"), "Base Url")
 	flag.Parse()
+	if conf.Mode == "m" {
+		OptApi = false
+		conf.Mode = "p"
+	}
 }
