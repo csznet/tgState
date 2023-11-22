@@ -11,7 +11,7 @@ import (
 
 func Vercel(w http.ResponseWriter, r *http.Request) {
 	conf.BotToken = os.Getenv("token")
-	conf.ChannelName = os.Getenv("channel")
+	conf.ChannelName = os.Getenv("target")
 	conf.Pass = os.Getenv("pass")
 	conf.Mode = os.Getenv("mode")
 	// 获取请求路径
