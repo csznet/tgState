@@ -7,6 +7,8 @@ tgState
 
 可以作为telegram图床，也可以作为telegram网盘使用。
 
+支持web上传文件和telegram支持上传
+
 搭配CLoudFlare使用：https://www.csz.net/proj/tgstate/
 
 如有疑惑，可以咨询TG @tgstate123  
@@ -121,12 +123,15 @@ docker pull csznet/tgstate:latest
 docker run -d -p 8088:8088 --name tgstate 参数 --net=host csznet/tgstate:latest
 ```
 其中docker的参数需要设置为环境变量
+
 **例子**
 ```
 docker run -d -p 8088:8088 --name tgstate -e token=aaa -e target=@bbb --net=host csznet/tgstate:latest
 ```
 
 ## Vercel
+
+不支持大于5mb文件，不支持tg获取文件路径
 
  [点我传送至Vercel配置页面](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=target&env=pass&env=mode&project-name=tgState&repository-name=tgState)  
 
