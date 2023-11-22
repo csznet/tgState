@@ -7,7 +7,7 @@ tgState
 
 可以作为telegram图床，也可以作为telegram网盘使用。
 
-支持web上传文件和telegram支持上传
+支持web上传文件和telegram直接上传
 
 搭配CLoudFlare使用：https://www.csz.net/proj/tgstate/
 
