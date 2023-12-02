@@ -96,6 +96,13 @@ Linux arm64下载
 wget https://github.com/csznet/tgState/releases/latest/download/tgState_arm64.zip && unzip tgState_arm64.zip && rm tgState_arm64.zip
 ```
 
+Linux 一键脚本
+
+```
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/csznet/tgState/main/get.sh)"
+```
+
+
 **使用方法**
 
 ```
