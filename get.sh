@@ -3,16 +3,16 @@
 ARCH=$(uname -m)
 
 if [ "$ARCH" == "x86_64" ]; then
-  DOWNLOAD_URL="https://github.com/csznet/tgState/releases/latest/download/tgState.zip"
+  File="tgState.zip"
 elif [ "$ARCH" == "aarch64" ]; then
-  DOWNLOAD_URL="https://github.com/csznet/tgState/releases/latest/download/tgState_arm64.zip"
+  File="tgState_arm64.zip"
 else
   echo "Unsupported architecture: $ARCH"
   exit 1
 fi
 
 # Download and unzip
-wget "$DOWNLOAD_URL" && unzip "tgState${ARCH}_latest.zip" && rm "tgState${ARCH}_latest.zip"
+wget "https://github.com/csznet/tgState/releases/latest/download/$File" && unzip "$File" && rm "$File"
 
 # Set permissions
 chmod +x tgState
