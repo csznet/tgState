@@ -133,6 +133,12 @@ docker run -d -p 8088:8088 --name tgstate 参数 --net=host csznet/tgstate:lates
 ```
 其中docker的参数需要设置为环境变量
 
+开机自启需要加上
+```
+--restart always
+```
+
+
 **例子**
 ```
 docker run -d -p 8088:8088 --name tgstate -e token=aaa -e target=@bbb --net=host csznet/tgstate:latest
