@@ -2,7 +2,6 @@ package control
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io"
 	"log"
@@ -110,7 +109,6 @@ func D(w http.ResponseWriter, r *http.Request) {
 	}
 	buffer := make([]byte, contentLength)
 	n, err := resp.Body.Read(buffer)
-	fmt.Println(string(buffer))
 	defer resp.Body.Close()
 	if err != nil && err != io.ErrUnexpectedEOF {
 		log.Println("读取响应主体数据时发生错误:", err)
