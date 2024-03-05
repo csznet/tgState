@@ -2,13 +2,14 @@ package control
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"strings"
-	"time"
 
 	"csz.net/tgstate/assets"
 	"csz.net/tgstate/conf"
@@ -89,24 +90,28 @@ func D(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 发起HTTP GET请求来获取Telegram图片
-	resp, err := http.Get(utils.GetDownloadUrl(id))
+	fileUrl, _ := utils.GetDownloadUrl(id)
+	resp, err := http.Get(fileUrl)
 	if err != nil {
 		http.Error(w, "Failed to fetch content", http.StatusInternalServerError)
 		return
 	}
-	defer resp.Body.Close()
 	w.Header().Set("Content-Disposition", "inline") // 设置为 "inline" 以支持在线播放
 	// 检查Content-Type是否为图片类型
 	if !strings.HasPrefix(resp.Header.Get("Content-Type"), "application/octet-stream") {
-		// 设置响应的状态码为 404
 		w.WriteHeader(http.StatusNotFound)
-		// 写入响应内容
 		w.Write([]byte("404 Not Found"))
 		return
 	}
-	// 读取前512个字节以用于文件类型检测
-	buffer := make([]byte, 10*1024*1024)
+	contentLength, err := strconv.Atoi(resp.Header.Get("Content-Length"))
+	if err != nil {
+		log.Println("获取Content-Length出错:", err)
+		return
+	}
+	buffer := make([]byte, contentLength)
 	n, err := resp.Body.Read(buffer)
+	fmt.Println(string(buffer))
+	defer resp.Body.Close()
 	if err != nil && err != io.ErrUnexpectedEOF {
 		log.Println("读取响应主体数据时发生错误:", err)
 		return
@@ -116,24 +121,34 @@ func D(w http.ResponseWriter, r *http.Request) {
 		content := string(buffer)
 		lines := strings.Split(content, "\n")
 		log.Println("分块文件:" + lines[1])
+		var fileSize string
+		var startLine = 2
+		if strings.HasPrefix(lines[2], "size") {
+			fileSize = lines[2][len("size"):]
+			startLine = startLine + 1
+		}
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.Header().Set("Content-Disposition", "attachment; filename=\""+lines[1]+"\"")
-		for i := 2; i < len(lines); i++ {
-			blobResp, err := http.Get(utils.GetDownloadUrl(strings.ReplaceAll(lines[i], " ", "")))
+		w.Header().Set("Content-Length", fileSize)
+		for i := startLine; i < len(lines); i++ {
+			fileStatus := false
+			var fileUrl string
+			for !fileStatus {
+				http.DefaultTransport.(*http.Transport).CloseIdleConnections()
+				fileUrl, fileStatus = utils.GetDownloadUrl(strings.ReplaceAll(lines[i], " ", ""))
+			}
+			blobResp, err := http.Get(fileUrl)
 			if err != nil {
 				http.Error(w, "Failed to fetch content", http.StatusInternalServerError)
 				return
 			}
-			// 将文件名设置到Content-Disposition标头
-			blobResp.Header.Set("Content-Disposition", "attachment; filename=\""+lines[1]+"\"")
-			defer blobResp.Body.Close()
 			_, err = io.Copy(w, blobResp.Body)
+			blobResp.Body.Close()
 			if err != nil {
 				log.Println("写入响应主体数据时发生错误:", err)
 				return
 			}
 		}
-		time.Sleep(10 * time.Second)
 	} else {
 		// 使用DetectContentType函数检测文件类型
 		w.Header().Set("Content-Type", http.DetectContentType(buffer))
@@ -144,6 +159,7 @@ func D(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		_, err = io.Copy(w, resp.Body)
+		resp.Body.Close()
 		if err != nil {
 			log.Println(http.StatusInternalServerError)
 			return

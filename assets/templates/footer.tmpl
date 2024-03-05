@@ -40,6 +40,7 @@
             }
             var temp = "tgstate-blob";
             temp = temp + '\n' + file.name;
+            temp = temp + '\nsize' + file.size;
             uploadNextChunk()
                 .then(() => {
                     console.log(temp); // 所有块上传完成后打印

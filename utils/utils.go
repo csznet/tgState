@@ -54,19 +54,30 @@ func UpDocument(fileData tgbotapi.FileReader) string {
 	return resp
 }
 
-func GetDownloadUrl(fileID string) string {
-	bot, err := tgbotapi.NewBotAPI(conf.BotToken)
+var tgbot *tgbotapi.BotAPI
+
+func GetBot() {
+	var err error
+	tgbot, err = tgbotapi.NewBotAPI(conf.BotToken)
 	if err != nil {
+		log.Println("初始化bot失败")
 		log.Panic(err)
 	}
+}
+
+func GetDownloadUrl(fileID string) (string, bool) {
 	// 使用 getFile 方法获取文件信息
-	file, err := bot.GetFile(tgbotapi.FileConfig{FileID: fileID})
+	file, err := tgbot.GetFile(tgbotapi.FileConfig{FileID: fileID})
 	if err != nil {
-		log.Panic(err)
+		log.Println("获取文件失败【" + fileID + "】")
+		log.Println(err)
+		return "", false
 	}
+	log.Println("获取文件成功【" + fileID + "】")
 	// 获取文件下载链接
 	fileURL := file.Link(conf.BotToken)
-	return fileURL
+
+	return fileURL, true
 }
 func BotDo() {
 	bot, err := tgbotapi.NewBotAPI(conf.BotToken)
