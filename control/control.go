@@ -15,7 +15,7 @@ import (
 	"csz.net/tgstate/utils"
 )
 
-// UploadImageAPI 上传文件api
+// UploadImageAPI 上传图片api
 func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if r.Method == http.MethodPost {
@@ -114,7 +114,7 @@ func D(w http.ResponseWriter, r *http.Request) {
 	// 输出文件内容到控制台
 	if string(buffer[:12]) == "tgstate-blob" {
 		content := string(buffer)
-		lines := strings.Fields(content)
+		lines := strings.Split(content, "\n")
 		log.Println("分块文件:" + lines[1])
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.Header().Set("Content-Disposition", "attachment; filename=\""+lines[1]+"\"")
