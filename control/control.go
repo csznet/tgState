@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"csz.net/tgstate/assets"
 	"csz.net/tgstate/conf"
@@ -131,8 +132,12 @@ func D(w http.ResponseWriter, r *http.Request) {
 		for i := startLine; i < len(lines); i++ {
 			fileStatus := false
 			var fileUrl string
+			var reTry = 0
 			for !fileStatus {
-				http.DefaultTransport.(*http.Transport).CloseIdleConnections()
+				if reTry > 0 {
+					time.Sleep(5 * time.Second)
+				}
+				reTry = reTry + 1
 				fileUrl, fileStatus = utils.GetDownloadUrl(strings.ReplaceAll(lines[i], " ", ""))
 			}
 			blobResp, err := http.Get(fileUrl)
