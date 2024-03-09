@@ -21,7 +21,6 @@ func main() {
 		fmt.Println("请先设置Bot Token和对象")
 		return
 	}
-	utils.GetBot()
 	go utils.BotDo()
 	web()
 }

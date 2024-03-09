@@ -54,20 +54,13 @@ func UpDocument(fileData tgbotapi.FileReader) string {
 	return resp
 }
 
-var tgbot *tgbotapi.BotAPI
-
-func GetBot() {
-	var err error
-	tgbot, err = tgbotapi.NewBotAPI(conf.BotToken)
+func GetDownloadUrl(fileID string) (string, bool) {
+	bot, err := tgbotapi.NewBotAPI(conf.BotToken)
 	if err != nil {
-		log.Println("初始化bot失败")
 		log.Panic(err)
 	}
-}
-
-func GetDownloadUrl(fileID string) (string, bool) {
 	// 使用 getFile 方法获取文件信息
-	file, err := tgbot.GetFile(tgbotapi.FileConfig{FileID: fileID})
+	file, err := bot.GetFile(tgbotapi.FileConfig{FileID: fileID})
 	if err != nil {
 		log.Println("获取文件失败【" + fileID + "】")
 		log.Println(err)
@@ -76,7 +69,6 @@ func GetDownloadUrl(fileID string) (string, bool) {
 	log.Println("获取文件成功【" + fileID + "】")
 	// 获取文件下载链接
 	fileURL := file.Link(conf.BotToken)
-
 	return fileURL, true
 }
 func BotDo() {
@@ -87,7 +79,8 @@ func BotDo() {
 	}
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
-	for update := range bot.GetUpdatesChan(u) {
+	updatesChan := bot.GetUpdatesChan(u)
+	for update := range updatesChan {
 		var msg *tgbotapi.Message
 		if update.Message != nil {
 			msg = update.Message
@@ -109,7 +102,7 @@ func BotDo() {
 				newMsg := tgbotapi.NewMessage(msg.Chat.ID, strings.TrimSuffix(conf.BaseUrl, "/")+"/d/"+fileID)
 				newMsg.ReplyToMessageID = msg.MessageID
 				if !strings.HasPrefix(conf.ChannelName, "@") {
-					if man, err := strconv.ParseInt(conf.ChannelName, 10, 64); err == nil && msg.Chat.ID == man {
+					if man, err := strconv.Atoi(conf.ChannelName); err == nil && newMsg.ReplyToMessageID == man {
 						bot.Send(newMsg)
 					}
 				} else {
