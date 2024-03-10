@@ -141,7 +141,7 @@ docker run -d -p 8088:8088 --name tgstate 参数 --net=host csznet/tgstate:lates
 
 **例子**
 ```
-docker run -d -p 8088:8088 --name tgstate -e token=aaa -e target=@bbb --net=host csznet/tgstate:latest
+docker run -d -p 8088:8088 --name tgstate -e token=token -e target=@target -e mode=p --net=host csznet/tgstate:latest
 ```
 
 ## Vercel
