@@ -11,7 +11,7 @@ Can be used as a Telegram image hosting service or a Telegram cloud drive.
 
 Supports web and Telegram direct file uploads.
 
-Use with CloudFlare: https://github.com/csznet/tgState/CloudFlare.md
+Use with CloudFlare: https://github.com/csznet/tgState/blob/main/CloudFlare.md
 
 For any questions, consult TG @tgstate123
 
