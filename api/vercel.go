@@ -14,6 +14,7 @@ func Vercel(w http.ResponseWriter, r *http.Request) {
 	conf.ChannelName = os.Getenv("target")
 	conf.Pass = os.Getenv("pass")
 	conf.Mode = os.Getenv("mode")
+	conf.BaseUrl = os.Getenv("url")
 	// 获取请求路径
 	path := r.URL.Path
 	// 如果请求路径以 "/img/" 开头
