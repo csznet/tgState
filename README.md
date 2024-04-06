@@ -156,4 +156,18 @@ docker run -d -p 8088:8088 --name tgstate -e token=token -e target=@target -e mo
 
 POST方法到路径```/api```
 
-表单传输，字段名为image，内容为二进制数据
+表单传输，字段名为image，内容为二进制数据  
+
+当设置访问密码时，直接将密码加入url参数pass中，如密码为123：
+
+```
+/api?pass=123
+```
+
+picgo-plugin-web-uploader填写说明：  
+
+POST参数名：`image`  
+
+JSON路径：`data.url`
+
+

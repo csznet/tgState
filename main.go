@@ -56,6 +56,8 @@ func init() {
 	flag.Parse()
 	if conf.Mode == "m" {
 		OptApi = false
+	}
+	if conf.Mode != "p" && conf.Mode != "m" {
 		conf.Mode = "p"
 	}
 }
