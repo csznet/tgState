@@ -57,7 +57,7 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 			res = conf.UploadResponse{
 				Code:    1,
 				Message: img,
-				ImgUrl:  strings.TrimSuffix(r.URL.String(), "/api") + img,
+				ImgUrl:  strings.TrimSuffix(conf.BaseUrl, "/") + img,
 			}
 		}
 		w.Header().Set("Content-Type", "application/json")

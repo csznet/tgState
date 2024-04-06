@@ -66,7 +66,7 @@ https://tgstate.vercel.app / https://tgstate.ikun123.com/
 
 ## url
 
-bot获取FileID的前置域名地址自动补充
+bot获取FileID的前置域名地址自动补充及api返回完整url的补充
 
 ## port
 
@@ -150,7 +150,7 @@ docker run -d -p 8088:8088 --name tgstate -e token=token -e target=@target -e mo
 
 不支持大于5mb文件，不支持tg获取文件路径
 
- [点我传送至Vercel配置页面](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=target&env=pass&env=mode&project-name=tgState&repository-name=tgState)  
+ [点我传送至Vercel配置页面](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcsznet%2FtgState&env=token&env=target&env=pass&env=mode&env=url&project-name=tgState&repository-name=tgState)  
 
 # API说明
 
@@ -164,10 +164,18 @@ POST方法到路径```/api```
 /api?pass=123
 ```
 
+返回示例:  
+
+```json
+{"code": 1, "message": "/d/xxx","url":"xxx"}
+```
+
+json格式的`url`默认返回tgState的`url`参数+访问路径，如果只得到了路径则需要自行设置`url`参数
+
 picgo-plugin-web-uploader填写说明：  
 
 POST参数名：`image`  
 
-JSON路径：`data.url`
+JSON路径：`url`
 
 
