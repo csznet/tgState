@@ -176,9 +176,8 @@ picgo-plugin-web-uploader填写说明：
 
 POST参数名：`image`  
 
-![image](https://github.com/csznet/tgState/assets/127601663/d70e6a42-1f21-4cbb-8ba5-1e9f7d9660a4)
-
-
 JSON路径：`url`
+
+![image](https://github.com/csznet/tgState/assets/127601663/d70e6a42-1f21-4cbb-8ba5-1e9f7d9660a4)
 
 
