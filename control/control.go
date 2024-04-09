@@ -274,7 +274,7 @@ func Middleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 只有当密码设置并且不为"none"时，才进行检查
 		if conf.Pass != "" && conf.Pass != "none" {
-			if cookie, err := r.Cookie("p"); err != nil || cookie.Value != conf.Pass || r.URL.Path == "/api" && r.URL.Query().Get("pass") != conf.Pass {
+			if cookie, err := r.Cookie("p"); err != nil || cookie.Value != conf.Pass || strings.HasPrefix(r.URL.Path, "/api") && r.URL.Query().Get("pass") != conf.Pass {
 				http.Redirect(w, r, "/pwd", http.StatusSeeOther)
 				return
 			}
