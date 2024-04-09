@@ -178,4 +178,6 @@ POST参数名：`image`
 
 JSON路径：`url`
 
+![image](https://github.com/csznet/tgState/assets/127601663/d70e6a42-1f21-4cbb-8ba5-1e9f7d9660a4)
+
 
