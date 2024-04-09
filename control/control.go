@@ -274,16 +274,9 @@ func Middleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 只有当密码设置并且不为"none"时，才进行检查
 		if conf.Pass != "" && conf.Pass != "none" {
-			if cookie, err := r.Cookie("p"); err != nil || cookie.Value != conf.Pass {
-				if r.URL.Path == "/api" {
-					if r.URL.Query().Get("pass") != conf.Pass {
-						http.Error(w, "Unauthorized", http.StatusUnauthorized)
-						return
-					}
-				} else {
-					http.Redirect(w, r, "/pwd", http.StatusSeeOther)
-					return
-				}
+			if cookie, err := r.Cookie("p"); err != nil || cookie.Value != conf.Pass || r.URL.Path == "/api" && r.URL.Query().Get("pass") != conf.Pass {
+				http.Redirect(w, r, "/pwd", http.StatusSeeOther)
+				return
 			}
 		}
 		next(w, r)
