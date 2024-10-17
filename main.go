@@ -49,10 +49,7 @@ func web() {
 }
 
 func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
+	_ = godotenv.Load()
 
 	flag.StringVar(&webPort, "port", "8088", "Web Port")
 	flag.StringVar(&conf.BotToken, "token", os.Getenv("token"), "Bot Token")
@@ -69,7 +66,7 @@ func init() {
 	if conf.Mode != "p" && conf.Mode != "m" {
 		conf.Mode = "p"
 	}
-	_, err = control.InitDB()
+	_, err := control.InitDB()
 	if err != nil {
 		log.Fatal(err)
 	}

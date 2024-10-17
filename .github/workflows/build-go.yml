@@ -26,7 +26,7 @@ jobs:
 
       - name: Build Linux arm64
         run: |
-          CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o tgState main.go
+          CGO_ENABLED=1 GOOS=linux GOARCH=arm64 go build -o tgState main.go
 
       - name: Zip Linux amd64
         run: |
