@@ -2,10 +2,12 @@ package control
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -19,9 +21,11 @@ import (
 // UploadImageAPI 上传图片api
 func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	if r.Method == http.MethodPost {
 		// 获取上传的文件
-		file, header, err := r.FormFile("image")
+		file, header, err := r.FormFile("file")
+
 		if err != nil {
 			errJsonMsg("Unable to get file", w)
 			// http.Error(w, "Unable to get file", http.StatusBadRequest)
@@ -35,7 +39,14 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 		}
 		// 检查文件类型
 		allowedExts := []string{".jpg", ".jpeg", ".png"}
-		ext := filepath.Ext(header.Filename)
+
+		// 如果设置了AllowedExts，则使用设置的文件类型
+		if len(conf.AllowedExts) > 0 {
+			allowedExts = append(allowedExts, strings.Split(conf.AllowedExts, ",")...)
+		}
+
+		var fileName = header.Filename
+		ext := filepath.Ext(fileName)
 		valid := false
 		for _, allowedExt := range allowedExts {
 			if ext == allowedExt {
@@ -44,7 +55,7 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if conf.Mode != "p" && !valid {
-			errJsonMsg("Invalid file type. Only .jpg, .jpeg, and .png are allowed.", w)
+			errJsonMsg(fmt.Sprintf("Invalid file type. Only .jpg, .jpeg, and .png %s are allowed.", conf.AllowedExts), w)
 			// http.Error(w, "Invalid file type. Only .jpg, .jpeg, and .png are allowed.", http.StatusBadRequest)
 			return
 		}
@@ -52,12 +63,26 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 			Code:    0,
 			Message: "error",
 		}
-		img := conf.FileRoute + utils.UpDocument(utils.TgFileData(header.Filename, file))
-		if img != conf.FileRoute {
+		fileId := utils.UpDocument(utils.TgFileData(fileName, file))
+		if "blob" != fileName {
+			ip := r.RemoteAddr // 获取上传者IP
+			// 插入数据到数据库
+			err := SaveFileRecord(fileId, fileName, ip)
+			if err != nil {
+				errJsonMsg("Unable to save file record", w)
+			}
+		}
+
+		downloadUrl := conf.FileRoute + fileId
+		if downloadUrl != conf.FileRoute {
+			imageUrl := strings.TrimSuffix(conf.BaseUrl, "/") + downloadUrl
+			// url encode imageUrl
+			proxyUrl := conf.ProxyUrl + "/" + url.QueryEscape(imageUrl)
 			res = conf.UploadResponse{
-				Code:    1,
-				Message: img,
-				ImgUrl:  strings.TrimSuffix(conf.BaseUrl, "/") + img,
+				Code:     1,
+				Message:  downloadUrl,
+				ImgUrl:   imageUrl,
+				ProxyUrl: proxyUrl,
 			}
 		}
 		w.Header().Set("Content-Type", "application/json")
@@ -81,8 +106,8 @@ func errJsonMsg(msg string, w http.ResponseWriter) {
 }
 func D(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
-	id := strings.TrimPrefix(path, conf.FileRoute)
-	if id == "" {
+	fileId := strings.TrimPrefix(path, conf.FileRoute)
+	if fileId == "" {
 		// 设置响应的状态码为 404
 		w.WriteHeader(http.StatusNotFound)
 		// 写入响应内容
@@ -91,7 +116,7 @@ func D(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 发起HTTP GET请求来获取Telegram图片
-	fileUrl, _ := utils.GetDownloadUrl(id)
+	fileUrl, _ := utils.GetDownloadUrl(fileId)
 	resp, err := http.Get(fileUrl)
 	if err != nil {
 		http.Error(w, "Failed to fetch content", http.StatusInternalServerError)
@@ -156,6 +181,12 @@ func D(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// 使用DetectContentType函数检测文件类型
 		w.Header().Set("Content-Type", http.DetectContentType(buffer))
+
+		fileName, err := GetFileNameByID(fileId)
+		if err == nil && fileName != "" {
+			w.Header().Set("Content-Disposition", "attachment; filename=\""+fileName+"\"")
+		}
+
 		_, err = w.Write(buffer[:n])
 		if err != nil {
 			http.Error(w, "Failed to write content", http.StatusInternalServerError)

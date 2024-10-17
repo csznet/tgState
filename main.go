@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/joho/godotenv"
+	"log"
 	"net"
 	"net/http"
 	"os"
@@ -47,12 +49,19 @@ func web() {
 }
 
 func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	flag.StringVar(&webPort, "port", "8088", "Web Port")
 	flag.StringVar(&conf.BotToken, "token", os.Getenv("token"), "Bot Token")
 	flag.StringVar(&conf.ChannelName, "target", os.Getenv("target"), "Channel Name or ID")
 	flag.StringVar(&conf.Pass, "pass", os.Getenv("pass"), "Visit Password")
 	flag.StringVar(&conf.Mode, "mode", os.Getenv("mode"), "Run mode")
 	flag.StringVar(&conf.BaseUrl, "url", os.Getenv("url"), "Base Url")
+	flag.StringVar(&conf.AllowedExts, "exts", os.Getenv("exts"), "Allowed Exts")
+	flag.StringVar(&conf.ProxyUrl, "proxyUrl", os.Getenv("proxyUrl"), "proxy url")
 	flag.Parse()
 	if conf.Mode == "m" {
 		OptApi = false
@@ -60,4 +69,9 @@ func init() {
 	if conf.Mode != "p" && conf.Mode != "m" {
 		conf.Mode = "p"
 	}
+	_, err = control.InitDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }

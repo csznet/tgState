@@ -58,7 +58,7 @@
     function uploadImg(e, ms) {
         return new Promise((resolve, reject) => {
             var o = new FormData();
-            o.append("image", e);
+            o.append("file", e);
             var isImage = e.type.startsWith('image/');
             $("#uploadButton").prop("disabled", !0);
             $("#uploadButton").text("上传中");
@@ -74,7 +74,9 @@
                     contentType: !1,
                     processData: !1,
                     success: function (e) {
+
                         var link = a + e.message;
+                        var proxyUrl = e.proxyUrl
                         var t;
                         if (e.code == 1) {
                             if (ms) {
@@ -90,6 +92,17 @@
                                         link +
                                         ')">Markdown</span><span class="copy-code" data-clipboard-text="[img]' +
                                         link +
+                                        '[/img]">BBCode</span></div></div>'+
+                                        '<div class="response-item response-success">上传成功，代理图片外链：<a target="_blank" href="' +
+                                        proxyUrl +
+                                        '">' +
+                                        proxyUrl +
+                                        '</a><div class="copy-links"><span class="copy-code" data-clipboard-text="&lt;img src=&quot;' +
+                                        proxyUrl +
+                                        '&quot; alt=&quot;Your Alt Text&quot;&gt;">HTML</span><span class="copy-code" data-clipboard-text="![Alt Text](' +
+                                        proxyUrl +
+                                        ')">Markdown</span><span class="copy-code" data-clipboard-text="[img]' +
+                                        link +
                                         '[/img]">BBCode</span></div></div>'
                                     );
                                 } else {
@@ -98,8 +111,13 @@
                                         link +
                                         '">' +
                                         link +
-                                        "</a></div>"
-                                    );
+                                        "</a></div>" +
+                                         '<div class="response-item response-success">上传成功，代理文件外链：<a target="_blank" href="' +
+                                          proxyUrl +
+                                          '">' +
+                                          proxyUrl +
+                                          "</a></div>"
+                                    )
                                 }
                             }
                             resolve(e.message);
