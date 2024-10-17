@@ -69,7 +69,7 @@
                 (a = a + ":" + window.location.port),
                 $.ajax({
                     type: "POST",
-                    url: a + "/api",
+                    url: window.location.href + "/api",
                     data: o,
                     contentType: !1,
                     processData: !1,
