@@ -25,3 +25,6 @@ mk.txt
 tmp/*
 .air.toml
 .vercel
+/.env
+/files.db
+/tgState.zip

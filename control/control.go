@@ -18,8 +18,8 @@ import (
 	"csz.net/tgstate/utils"
 )
 
-// UploadImageAPI 上传图片api
-func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
+// UploadAPI 上传图片api
+func UploadAPI(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if r.Method == http.MethodPost {
@@ -94,16 +94,8 @@ func UploadImageAPI(w http.ResponseWriter, r *http.Request) {
 	// 如果不是POST请求，返回错误响应
 	http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 }
-func errJsonMsg(msg string, w http.ResponseWriter) {
-	// 这里示例直接返回JSON响应
-	response := conf.UploadResponse{
-		Code:    0,
-		Message: msg,
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
-}
+
+// D 下载文件
 func D(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	fileId := strings.TrimPrefix(path, conf.FileRoute)
@@ -111,7 +103,7 @@ func D(w http.ResponseWriter, r *http.Request) {
 		// 设置响应的状态码为 404
 		w.WriteHeader(http.StatusNotFound)
 		// 写入响应内容
-		w.Write([]byte("404 Not Found"))
+		errJsonMsg("404 Not Found", w)
 		return
 	}
 
@@ -299,6 +291,42 @@ func Pwd(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func FilesAPI(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	password := r.URL.Query().Get("password")
+	response := conf.ResponseResult{
+		Code:    0,
+		Message: "ok",
+	}
+
+	if conf.ApiPass != "" && password != conf.ApiPass {
+		response.Message = "Unauthorized"
+		response.Code = http.StatusUnauthorized
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	record, err := SelectAllRecord()
+	response.Data = record
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
+}
+
+func errJsonMsg(msg string, w http.ResponseWriter) {
+	// 这里示例直接返回JSON响应
+	response := conf.UploadResponse{
+		Code:    0,
+		Message: msg,
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
 }
 
 func Middleware(next http.HandlerFunc) http.HandlerFunc {

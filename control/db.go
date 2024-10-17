@@ -7,6 +7,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"sync"
+	"time"
 )
 
 var (
@@ -60,4 +61,39 @@ func SaveFileRecord(fileID string, fileName string, ip string) error {
 	// 插入数据到数据库
 	_, err := db.Exec("INSERT INTO uploaded_files (fileId, filename, ip) VALUES (?, ?, ?)", fileID, fileName, ip)
 	return err
+}
+
+type FileRecord struct {
+	FileId   string    `json:"fileId"`
+	Filename string    `json:"filename"`
+	Ip       string    `json:"ip"`
+	Time     time.Time `json:"time"`
+}
+
+func SelectAllRecord() ([]FileRecord, error) {
+	// 查询所有记录
+	rows, err := db.Query("SELECT fileId, filename, ip, time FROM uploaded_files")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var records []FileRecord
+
+	// 迭代查询结果
+	for rows.Next() {
+		var record FileRecord
+		err := rows.Scan(&record.FileId, &record.Filename, &record.Ip, &record.Time)
+		if err != nil {
+			return nil, err
+		}
+		records = append(records, record)
+	}
+
+	// 检查查询错误
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return records, nil
 }
