@@ -24,8 +24,12 @@ https://tgstate.vercel.app / https://tgstate.ikun123.com/
 不限制大小demo（临时） http://tgstate-cdn.ikun123.com/
 
 演示图片：
+<details>
+<summary>NSFW</summary>
 
 ![tgState](https://tgstate.vercel.app/d/BQACAgUAAx0EcyK3ugACByxlOR-Nfl4esavoO4zdaYIP_k1KYQACDAsAAkf4yFVpf_awaEkS8jAE)  
+</details>
+
 
 # 参数说明
 
