@@ -106,7 +106,10 @@ func D(w http.ResponseWriter, r *http.Request) {
 		errJsonMsg("404 Not Found", w)
 		return
 	}
-
+	record, err := GetFileNameByIDOrName(fileId)
+	if err == nil && record.FileId != "" {
+		fileId = record.FileId
+	}
 	// 发起HTTP GET请求来获取Telegram图片
 	fileUrl, _ := utils.GetDownloadUrl(fileId)
 	resp, err := http.Get(fileUrl)
@@ -174,9 +177,8 @@ func D(w http.ResponseWriter, r *http.Request) {
 		// 使用DetectContentType函数检测文件类型
 		w.Header().Set("Content-Type", http.DetectContentType(buffer))
 
-		fileName, err := GetFileNameByID(fileId)
-		if err == nil && fileName != "" {
-			w.Header().Set("Content-Disposition", "attachment; filename=\""+fileName+"\"")
+		if err == nil && record.Filename != "" {
+			w.Header().Set("Content-Disposition", "attachment; filename=\""+record.Filename+"\"")
 		}
 
 		_, err = w.Write(buffer[:n])

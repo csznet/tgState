@@ -41,33 +41,33 @@ func InitDB() (*sql.DB, error) {
 	return db, err
 }
 
-// GetFileNameByID 查询文件名
-func GetFileNameByID(id string) (string, error) {
-	var fileName string
-	// 执行查询，获取对应id的fileName
-	query := "SELECT filename FROM uploaded_files WHERE fileId = ?"
-	err := db.QueryRow(query, id).Scan(&fileName)
+type FileRecord struct {
+	FileId   string    `json:"fileId"`
+	Filename string    `json:"filename"`
+	Ip       string    `json:"ip"`
+	Time     time.Time `json:"time"`
+}
+
+// GetFileNameByIDOrName 查询文件名
+func GetFileNameByIDOrName(idOrName string) (FileRecord, error) {
+	var record FileRecord
+	// 执行查询，获取对应id或name的file记录
+	query := "SELECT fileId, filename, ip, time FROM uploaded_files WHERE fileId = ? OR filename = ? ORDER BY time DESC LIMIT 1"
+	err := db.QueryRow(query, idOrName, idOrName).Scan(&record.FileId, &record.Filename, &record.Ip, &record.Time)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return "", fmt.Errorf("no file found with id %s", id)
+			return FileRecord{}, fmt.Errorf("no file found with idOrName %s", idOrName)
 		}
-		return "", err
+		return FileRecord{}, err
 	}
 
-	return fileName, nil
+	return record, nil
 }
 
 func SaveFileRecord(fileID string, fileName string, ip string) error {
 	// 插入数据到数据库
 	_, err := db.Exec("INSERT INTO uploaded_files (fileId, filename, ip) VALUES (?, ?, ?)", fileID, fileName, ip)
 	return err
-}
-
-type FileRecord struct {
-	FileId   string    `json:"fileId"`
-	Filename string    `json:"filename"`
-	Ip       string    `json:"ip"`
-	Time     time.Time `json:"time"`
 }
 
 func SelectAllRecord() ([]FileRecord, error) {
