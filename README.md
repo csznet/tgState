@@ -17,11 +17,9 @@ tgState
 
 # 演示
 
-https://tgstate.vercel.app / https://tgstate.ikun123.com/
+https://tgstate.vercel.app
 
 搭建在vercel，资源限制，大于5MB的文件不支持
-
-不限制大小demo（临时） http://tgstate-cdn.ikun123.com/
 
 演示图片：
 
