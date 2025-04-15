@@ -23,7 +23,11 @@ Hosted on Vercel, resource limitations - files larger than 5MB are not supported
 
 Demo image:
 
+<details>
+<summary>NSFW</summary>
+
 ![tgState](https://tgstate.vercel.app/d/BQACAgUAAx0EcyK3ugACByxlOR-Nfl4esavoO4zdaYIP_k1KYQACDAsAAkf4yFVpf_awaEkS8jAE)
+</details>
 
 # Parameter Description
 

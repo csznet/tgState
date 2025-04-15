@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/joho/godotenv"
+	"log"
 	"net"
 	"net/http"
 	"os"
@@ -31,7 +33,8 @@ func web() {
 		if conf.Pass != "" && conf.Pass != "none" {
 			http.HandleFunc("/pwd", control.Pwd)
 		}
-		http.HandleFunc("/api", control.Middleware(control.UploadImageAPI))
+		http.HandleFunc("/api", control.Middleware(control.UploadAPI))
+		http.HandleFunc("/files", control.Middleware(control.FilesAPI))
 		http.HandleFunc("/", control.Middleware(control.Index))
 	}
 
@@ -47,12 +50,17 @@ func web() {
 }
 
 func init() {
+	_ = godotenv.Load()
+
 	flag.StringVar(&webPort, "port", "8088", "Web Port")
 	flag.StringVar(&conf.BotToken, "token", os.Getenv("token"), "Bot Token")
 	flag.StringVar(&conf.ChannelName, "target", os.Getenv("target"), "Channel Name or ID")
 	flag.StringVar(&conf.Pass, "pass", os.Getenv("pass"), "Visit Password")
+	flag.StringVar(&conf.ApiPass, "apiPass", os.Getenv("apiPass"), "API Visit Password")
 	flag.StringVar(&conf.Mode, "mode", os.Getenv("mode"), "Run mode")
 	flag.StringVar(&conf.BaseUrl, "url", os.Getenv("url"), "Base Url")
+	flag.StringVar(&conf.AllowedExts, "exts", os.Getenv("exts"), "Allowed Exts")
+	flag.StringVar(&conf.ProxyUrl, "proxyUrl", os.Getenv("proxyUrl"), "proxy url")
 	flag.Parse()
 	if conf.Mode == "m" {
 		OptApi = false
@@ -60,4 +68,9 @@ func init() {
 	if conf.Mode != "p" && conf.Mode != "m" {
 		conf.Mode = "p"
 	}
+	_, err := control.InitDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }

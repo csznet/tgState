@@ -24,8 +24,8 @@ func Vercel(w http.ResponseWriter, r *http.Request) {
 	}
 	switch path {
 	case "/api":
-		// 调用 control 包中的 UploadImageAPI 处理函数
-		control.Middleware(control.UploadImageAPI)(w, r)
+		// 调用 control 包中的 UploadAPI 处理函数
+		control.Middleware(control.UploadAPI)(w, r)
 	case "/pwd":
 		control.Pwd(w, r)
 	default:
